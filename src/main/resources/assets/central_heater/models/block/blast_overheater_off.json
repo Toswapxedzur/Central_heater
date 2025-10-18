@@ -1,0 +1,24 @@
+{
+	"format_version": "1.21.6",
+	"credit": "Made with Blockbench",
+	"texture_size": [64, 64],
+	"textures": {
+		"0": "central_heater:block/blast_overheater_back",
+		"1": "central_heater:block/blast_overheater_front_off",
+		"particle": "central_heater:block/blast_overheater_back"
+	},
+	"elements": [
+		{
+			"from": [-4, -8, -4],
+			"to": [20, 5, 20],
+			"faces": {
+				"north": {"uv": [0, 0, 6, 3.25], "texture": "#1"},
+				"east": {"uv": [0, 6, 6, 9.25], "texture": "#0"},
+				"south": {"uv": [0, 6, 6, 9.25], "texture": "#0"},
+				"west": {"uv": [0, 6, 6, 9.25], "texture": "#0"},
+				"up": {"uv": [0, 0, 6, 6], "texture": "#0"},
+				"down": {"uv": [0, 0, 6, 6], "texture": "#0"}
+			}
+		}
+	]
+}

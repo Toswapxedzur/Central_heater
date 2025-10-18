@@ -1,0 +1,120 @@
+---- Minecraft Chunk IO Error Report ----
+// Worst magic trick ever!
+
+Time: 2025-10-18 14:08:15
+Description: Chunk save failure
+
+java.lang.NullPointerException: Cannot read the array length because "this.data" is null
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.nbt.IntArrayTag.write(IntArrayTag.java:73) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.nbt.CompoundTag.writeNamedTag(CompoundTag.java:524) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.nbt.CompoundTag.write(CompoundTag.java:192) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.nbt.ListTag.write(ListTag.java:168) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.nbt.CompoundTag.writeNamedTag(CompoundTag.java:524) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.nbt.CompoundTag.write(CompoundTag.java:192) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.nbt.NbtIo.writeUnnamedTag(NbtIo.java:182) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.nbt.NbtIo.writeUnnamedTagWithFallback(NbtIo.java:187) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.nbt.NbtIo.write(NbtIo.java:141) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.world.level.chunk.storage.RegionFileStorage.write(RegionFileStorage.java:84) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.world.level.chunk.storage.IOWorker.runStore(IOWorker.java:219) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.world.level.chunk.storage.IOWorker.storePendingChunk(IOWorker.java:208) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.util.thread.StrictQueue$IntRunnable.run(StrictQueue.java:77) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.Util.lambda$wrapThreadWithTaskName$5(Util.java:286) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.util.thread.ProcessorMailbox.pollTask(ProcessorMailbox.java:81) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.util.thread.ProcessorMailbox.pollUntil(ProcessorMailbox.java:129) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.util.thread.ProcessorMailbox.run(ProcessorMailbox.java:90) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading}
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144) ~[?:?] {}
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642) ~[?:?] {}
+	at java.base/java.lang.Thread.run(Thread.java:1583) [?:?] {}
+
+
+A detailed walkthrough of the error, its code path and all known details is as follows:
+---------------------------------------------------------------------------------------
+
+-- Head --
+Thread: IO-Worker-5
+Stacktrace:
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.nbt.IntArrayTag.write(IntArrayTag.java:73) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.nbt.CompoundTag.writeNamedTag(CompoundTag.java:524) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.nbt.CompoundTag.write(CompoundTag.java:192) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.nbt.ListTag.write(ListTag.java:168) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.nbt.CompoundTag.writeNamedTag(CompoundTag.java:524) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.nbt.CompoundTag.write(CompoundTag.java:192) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.nbt.NbtIo.writeUnnamedTag(NbtIo.java:182) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.nbt.NbtIo.writeUnnamedTagWithFallback(NbtIo.java:187) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.nbt.NbtIo.write(NbtIo.java:141) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.world.level.chunk.storage.RegionFileStorage.write(RegionFileStorage.java:84) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.world.level.chunk.storage.IOWorker.runStore(IOWorker.java:219) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.world.level.chunk.storage.IOWorker.storePendingChunk(IOWorker.java:208) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.util.thread.StrictQueue$IntRunnable.run(StrictQueue.java:77) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.Util.lambda$wrapThreadWithTaskName$5(Util.java:286) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.util.thread.ProcessorMailbox.pollTask(ProcessorMailbox.java:81) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.util.thread.ProcessorMailbox.pollUntil(ProcessorMailbox.java:129) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading}
+-- Chunk Info --
+Details:
+	Level: New World
+	Dimension: minecraft:overworld
+	Storage: chunk
+	Position: [-6, -2]
+Stacktrace:
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.MinecraftServer.lambda$storeChunkIoError$38(MinecraftServer.java:2067) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading,pl:accesstransformer:B}
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144) ~[?:?] {}
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642) ~[?:?] {}
+	at java.base/java.lang.Thread.run(Thread.java:1583) [?:?] {}
+
+
+-- System Details --
+Details:
+	Minecraft Version: 1.21.1
+	Minecraft Version ID: 1.21.1
+	Operating System: Mac OS X (aarch64) version 15.6.1
+	Java Version: 21.0.8, Oracle Corporation
+	Java VM Version: Java HotSpot(TM) 64-Bit Server VM (mixed mode, sharing), Oracle Corporation
+	Memory: 604773264 bytes (576 MiB) / 1677721600 bytes (1600 MiB) up to 4294967296 bytes (4096 MiB)
+	CPUs: 10
+	Processor Vendor: Apple Inc.
+	Processor Name: Apple M1 Pro
+	Identifier: Apple Inc. Family 0x1b588bb3 Model 0 Stepping 0
+	Microarchitecture: ARM64 SoC: Firestorm + Icestorm
+	Frequency (GHz): 3.23
+	Number of physical packages: 1
+	Number of physical CPUs: 10
+	Number of logical CPUs: 10
+	Graphics card #0 name: Apple M1 Pro
+	Graphics card #0 vendor: Apple (0x106b)
+	Graphics card #0 VRAM (MiB): 0.00
+	Graphics card #0 deviceId: unknown
+	Graphics card #0 versionInfo: unknown
+	Memory slot #0 capacity (MiB): 0.00
+	Memory slot #0 clockSpeed (GHz): 0.00
+	Memory slot #0 type: unknown
+	Virtual memory max (MiB): 17408.00
+	Virtual memory used (MiB): 12605.48
+	Swap memory total (MiB): 1024.00
+	Swap memory used (MiB): 225.75
+	Space in storage for jna.tmpdir (MiB): <path not set>
+	Space in storage for org.lwjgl.system.SharedLibraryExtractPath (MiB): <path not set>
+	Space in storage for io.netty.native.workdir (MiB): <path not set>
+	Space in storage for java.io.tmpdir (MiB): available: 811388.50, total: 948584.19
+	Space in storage for workdir (MiB): available: 811388.50, total: 948584.19
+	JVM Flags: 0 total; 
+	ModLauncher: 11.0.5+main.901c6ea8
+	ModLauncher launch target: forgeclientdev
+	ModLauncher services: 
+		sponge-mixin-0.15.2+mixin.0.8.7.jar mixin PLUGINSERVICE 
+		loader-4.0.42.jar slf4jfixer PLUGINSERVICE 
+		loader-4.0.42.jar runtime_enum_extender PLUGINSERVICE 
+		at-modlauncher-10.0.1.jar accesstransformer PLUGINSERVICE 
+		loader-4.0.42.jar runtimedistcleaner PLUGINSERVICE 
+		modlauncher-11.0.5.jar mixin TRANSFORMATIONSERVICE 
+		modlauncher-11.0.5.jar fml TRANSFORMATIONSERVICE 
+	FML Language Providers: 
+		javafml@4.0
+		lowcodefml@4.0
+		minecraft@4.0
+	Mod List: 
+		main                                              |central_heater                |central_heater                |1.0-SNAPSHOT        |Manifest: NOSIGNATURE
+		neoforge-21.1.211.jar                             |Minecraft                     |minecraft                     |1.21.1              |Manifest: NOSIGNATURE
+		neoforge-21.1.211.jar                             |NeoForge                      |neoforge                      |21.1.211            |Manifest: NOSIGNATURE
+	Crash Report UUID: 74218b54-e41e-486b-99ec-97251e5d5b0e
+	FML: 4.0.42
+	NeoForge: 21.1.211
