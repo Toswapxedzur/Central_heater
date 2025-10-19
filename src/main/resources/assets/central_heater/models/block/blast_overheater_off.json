@@ -1,7 +1,4 @@
 {
-	"format_version": "1.21.6",
-	"credit": "Made with Blockbench",
-	"texture_size": [64, 64],
 	"textures": {
 		"0": "central_heater:block/blast_overheater_back",
 		"1": "central_heater:block/blast_overheater_front_off",

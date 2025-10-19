@@ -31,43 +31,10 @@ import net.neoforged.neoforge.event.level.BlockEvent;
 public class Event {
 
     @SubscribeEvent
-    public static void onUseItemOnBlock(UseItemOnBlockEvent event){
-        if(event.getLevel().isClientSide)
-            return;
-        if(event.getUsePhase() == UseItemOnBlockEvent.UsePhase.ITEM_BEFORE_BLOCK){
-            Level level = event.getLevel();
-            BlockPos pos = event.getPos();
-            BlockState block = level.getBlockState(pos);
-            BlockEntity blockEntity = level.getBlockEntity(pos);
-            Entity player = event.getPlayer();
-
-            Direction blockDirection = Direction.NORTH;
-            if(block.hasProperty(BlockStateProperties.HORIZONTAL_FACING)){
-                blockDirection = block.getValue(BlockStateProperties.HORIZONTAL_FACING);
-            }else if(block.hasProperty(BlockStateProperties.FACING) && block.getValue(BlockStateProperties.FACING).getAxis().isHorizontal()){
-                blockDirection = block.getValue(BlockStateProperties.FACING);
-            }else if(block.hasProperty(BlockStateProperties.FACING_HOPPER) && block.getValue(BlockStateProperties.FACING_HOPPER).getAxis().isHorizontal()){
-                blockDirection = block.getValue(BlockStateProperties.FACING_HOPPER);
-            }
-
-            if(player!= null) {
-                if (blockEntity instanceof RandomizableContainerBlockEntity && event.getItemStack().is(AllRegistry.Blast_overheater_item)) {
-                    ItemStack stack = event.getItemStack();
-                    event.getLevel().setBlock(pos.above(), AllRegistry.Blast_overheater.get().
-                            defaultBlockState().setValue(BlockStateProperties.HORIZONTAL_FACING, blockDirection), 2);
-                    stack.shrink(1);
-                    event.getPlayer().awardStat(Stats.ITEM_USED.get(AllRegistry.Blast_overheater_item.asItem()));
-                    event.cancelWithResult(ItemInteractionResult.SUCCESS);
-                }
-            }
-        }
-    }
-
-    @SubscribeEvent
     public static void rightClick(PlayerInteractEvent.RightClickBlock event){
         if(event.getLevel().getBlockState(event.getPos()).is(AllRegistry.Blast_overheater)){
-//            System.out.println(((BlastOverheaterBlockEntity)event.getLevel().getBlockEntity(event.getPos())).litTime);
-            System.out.println(event.getLevel().getBlockState(event.getPos()).getValue(BlockStateProperties.LIT));
+            System.out.println(((BlastOverheaterBlockEntity)event.getLevel().getBlockEntity(event.getPos())).litTime);
+            System.out.println(event.getLevel().getBlockState(event.getPos()).getValue(BlastOverheaterBlock.LIT));
         }
     }
 }

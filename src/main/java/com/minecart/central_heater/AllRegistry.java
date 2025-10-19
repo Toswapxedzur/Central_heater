@@ -20,7 +20,7 @@ public class AllRegistry {
 
     public static DeferredBlock<Block> Blast_overheater = BLOCKS.register("blast_overheater", ()->new BlastOverheaterBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.BLAST_FURNACE).noOcclusion()));
     public static DeferredItem<BlockItem> Blast_overheater_item = ITEMS.registerSimpleBlockItem(Blast_overheater);
-    public static Supplier<BlockEntityType<BlastOverheaterBlockEntity>> Blast_overheater_be = BLOCK_ENTITIES.register("blast_overheater_be",
+    public static Supplier<BlockEntityType<BlastOverheaterBlockEntity>> Blast_overheater_be = BLOCK_ENTITIES.register("blast_overheater",
             ()->BlockEntityType.Builder.of(BlastOverheaterBlockEntity::new, Blast_overheater.get()).build(null));
 
     public static void register(IEventBus modEventbus){

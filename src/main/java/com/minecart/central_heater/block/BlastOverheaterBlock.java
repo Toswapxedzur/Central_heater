@@ -37,6 +37,9 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Function;
+import java.util.function.Supplier;
+
 public class BlastOverheaterBlock extends BaseEntityBlock{
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
@@ -94,8 +97,8 @@ public class BlastOverheaterBlock extends BaseEntityBlock{
 
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-//        if(level.isClientSide)
-//            return ItemInteractionResult.SUCCESS;
+        if(level.isClientSide)
+            return ItemInteractionResult.SUCCESS;
         if(!(level.getBlockEntity(pos) == null) && !level.getBlockEntity(pos).isRemoved() && level.getBlockEntity(pos) instanceof BlastOverheaterBlockEntity){
             BlastOverheaterBlockEntity entity = (BlastOverheaterBlockEntity) level.getBlockEntity(pos);
             if(stack.is(Items.FLINT_AND_STEEL)){
@@ -122,6 +125,8 @@ public class BlastOverheaterBlock extends BaseEntityBlock{
 
     @Override
     protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        if(level.isClientSide)
+            return;
         if (!state.is(newState.getBlock())) {
             BlockEntity blockentity = level.getBlockEntity(pos);
             if (blockentity instanceof BlastOverheaterBlockEntity blastOverheaterBlockEntity) {
@@ -174,17 +179,23 @@ public class BlastOverheaterBlock extends BaseEntityBlock{
             double d1 = (double)pos.getY();
             double d2 = (double)pos.getZ() + 0.5;
             if (random.nextDouble() < 0.1) {
-                level.playLocalSound(d0, d1, d2, SoundEvents.BLASTFURNACE_FIRE_CRACKLE, SoundSource.BLOCKS, 1.0F, 1.0F, false);
+                level.playLocalSound(d0, d1, d2, SoundEvents.BLASTFURNACE_FIRE_CRACKLE, SoundSource.BLOCKS, 5.0F, 1.0F, false);
             }
-
             Direction direction = state.getValue(FACING);
             Direction.Axis direction$axis = direction.getAxis();
-            double d3 = 0.52;
             double d4 = random.nextDouble() * 0.6 - 0.3;
-            double d5 = direction$axis == Direction.Axis.X ? (double)direction.getStepX() * 0.52 : d4;
+            double d5 = direction$axis == Direction.Axis.X ? (double)direction.getStepX() * 0.77 : d4;
             double d6 = random.nextDouble() * 9.0 / 16.0;
-            double d7 = direction$axis == Direction.Axis.Z ? (double)direction.getStepZ() * 0.52 : d4;
-            level.addParticle(ParticleTypes.SMOKE, d0 + d5, d1 + d6, d2 + d7, 0.0, 0.0, 0.0);
+            double d7 = direction$axis == Direction.Axis.Z ? (double)direction.getStepZ() * 0.77 : d4;
+            Function<Double, Double> d8 = d -> random.nextDouble() * d * 2 - d;
+            for(int i=0;i<random.nextIntBetweenInclusive(3,5);i++)
+                level.addParticle(ParticleTypes.SMOKE, d0 + d5, d1 + d6, d2 + d7, d8.apply(0.05), d8.apply(0.04)+0.07, d8.apply(0.05));
+            for(int i=0;i<random.nextIntBetweenInclusive(1,3);i++)
+                level.addParticle(ParticleTypes.WHITE_SMOKE, d0 + d5, d1 + d6, d2 + d7, d8.apply(0.04), d8.apply(0.03)+0.07, d8.apply(0.04));
+            for(int i=0;i<random.nextIntBetweenInclusive(0,2);i++)
+                level.addParticle(ParticleTypes.LARGE_SMOKE, d0 + d5, d1 + d6, d2 + d7, d8.apply(0.04), d8.apply(0.04)+0.06, d8.apply(0.04));
+            for(int i=0;i<random.nextIntBetweenInclusive(0,1);i++)
+                level.addParticle(ParticleTypes.CAMPFIRE_COSY_SMOKE, d0 + d5, d1 + d6, d2 + d7, d8.apply(0.03), d8.apply(0.03)+0.03, d8.apply(0.03));
         }
     }
 }
