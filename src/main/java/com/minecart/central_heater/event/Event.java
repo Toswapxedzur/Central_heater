@@ -2,7 +2,10 @@ package com.minecart.central_heater.event;
 
 import com.minecart.central_heater.AllRegistry;
 import com.minecart.central_heater.block.BlastOverheaterBlock;
+import com.minecart.central_heater.block.StoneStoveBlock;
 import com.minecart.central_heater.block_entity.BlastOverheaterBlockEntity;
+import com.minecart.central_heater.block_entity.GoldenStoveBlockEntity;
+import com.minecart.central_heater.block_entity.StoneStoveBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.ClickEvent;
@@ -32,9 +35,9 @@ public class Event {
 
     @SubscribeEvent
     public static void rightClick(PlayerInteractEvent.RightClickBlock event){
-        if(event.getLevel().getBlockState(event.getPos()).is(AllRegistry.Blast_overheater)){
-            System.out.println(((BlastOverheaterBlockEntity)event.getLevel().getBlockEntity(event.getPos())).litTime);
-            System.out.println(event.getLevel().getBlockState(event.getPos()).getValue(BlastOverheaterBlock.LIT));
+        if(event.getLevel().getBlockState(event.getPos()).is(AllRegistry.Red_nether_brick_stove.get())){
+//            System.out.println(((StoneStoveBlockEntity)event.getLevel().getBlockEntity(event.getPos())));
+            System.out.println(((GoldenStoveBlockEntity)event.getLevel().getBlockEntity(event.getPos())).litTime);
         }
     }
 }

@@ -1,0 +1,10 @@
+{
+  "parent": "central_heater:block/stove_off",
+  "textures": {
+    "0": "minecraft:block/bricks",
+    "1": "central_heater:block/brick_stove_side",
+    "2": "central_heater:block/stove_up",
+    "4": "central_heater:block/brick_stove_beam",
+    "particle": "minecraft:block/bricks"
+  }
+}

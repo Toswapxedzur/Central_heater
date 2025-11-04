@@ -23,10 +23,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
+import net.minecraft.world.level.block.entity.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -46,8 +43,8 @@ public class BlastOverheaterBlock extends BaseEntityBlock{
 
     public static final MapCodec<BlastOverheaterBlock> CODEC = simpleCodec(BlastOverheaterBlock::new);
 
-    public static final VoxelShape SHAPE = Block.box(-4,-8,-4,20,5,20);
-    public static final VoxelShape INTERACTION_SHAPE = Block.box(0,-8,0,16,5,16);
+    public static final VoxelShape SHAPE = Block.box(-2,-9,-2,18,3,18);
+    public static final VoxelShape INTERACTION_SHAPE = Block.box(0,-9,0,16,3,16);
 
     public BlastOverheaterBlock(Properties properties) {
         super(properties.noOcclusion().lightLevel(state -> state.getValue(LIT) ? 15 : 0));
@@ -102,9 +99,9 @@ public class BlastOverheaterBlock extends BaseEntityBlock{
         if(!(level.getBlockEntity(pos) == null) && !level.getBlockEntity(pos).isRemoved() && level.getBlockEntity(pos) instanceof BlastOverheaterBlockEntity){
             BlastOverheaterBlockEntity entity = (BlastOverheaterBlockEntity) level.getBlockEntity(pos);
             if(stack.is(Items.FLINT_AND_STEEL)){
-                BlastOverheaterBlockEntity.kindle(entity);
+                entity.kindle();
             }else {
-                BlastOverheaterBlockEntity.insertItem(entity, stack);
+                entity.insertItem(stack);
             }
             return ItemInteractionResult.SUCCESS;
         }
@@ -115,9 +112,8 @@ public class BlastOverheaterBlock extends BaseEntityBlock{
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         if(level.isClientSide)
             return InteractionResult.SUCCESS;
-        if(!(level.getBlockEntity(pos) == null) && !level.getBlockEntity(pos).isRemoved() && level.getBlockEntity(pos) instanceof BlastOverheaterBlockEntity){
-            BlastOverheaterBlockEntity entity = (BlastOverheaterBlockEntity) level.getBlockEntity(pos);
-            player.setItemInHand(InteractionHand.MAIN_HAND, BlastOverheaterBlockEntity.extractItem(entity));
+        if(level.getBlockEntity(pos) != null && !level.getBlockEntity(pos).isRemoved() && level.getBlockEntity(pos) instanceof BlastOverheaterBlockEntity entity){
+            player.addItem(entity.extractItem());
             return InteractionResult.SUCCESS;
         }
         return InteractionResult.CONSUME;
@@ -131,7 +127,7 @@ public class BlastOverheaterBlock extends BaseEntityBlock{
             BlockEntity blockentity = level.getBlockEntity(pos);
             if (blockentity instanceof BlastOverheaterBlockEntity blastOverheaterBlockEntity) {
                 if (level instanceof ServerLevel) {
-                    BlastOverheaterBlockEntity.dropContent(blastOverheaterBlockEntity);
+                    blastOverheaterBlockEntity.dropContent();
                 }
                 super.onRemove(state, level, pos, newState, movedByPiston);
                 level.updateNeighbourForOutputSignal(pos, this);
@@ -168,7 +164,7 @@ public class BlastOverheaterBlock extends BaseEntityBlock{
 
     @Override
     public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
-        return (blockEntityType == AllRegistry.Blast_overheater_be.get()) ?
+        return (!level.isClientSide && blockEntityType == AllRegistry.Blast_overheater_be.get()) ?
                 createTickerHelper(blockEntityType, AllRegistry.Blast_overheater_be.get(), BlastOverheaterBlockEntity::serverTick) : null ;
     }
 
@@ -197,5 +193,6 @@ public class BlastOverheaterBlock extends BaseEntityBlock{
             for(int i=0;i<random.nextIntBetweenInclusive(0,1);i++)
                 level.addParticle(ParticleTypes.CAMPFIRE_COSY_SMOKE, d0 + d5, d1 + d6, d2 + d7, d8.apply(0.03), d8.apply(0.03)+0.03, d8.apply(0.03));
         }
+        super.animateTick(state, level, pos, random);
     }
 }

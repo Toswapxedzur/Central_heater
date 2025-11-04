@@ -20,6 +20,9 @@ public class LootTable extends BlockLootSubProvider {
     @Override
     public void generate() {
         dropSelf(AllRegistry.Blast_overheater.get());
+        dropSelf(AllRegistry.Stone_tile.get());
+        dropSelf(AllRegistry.Stone_stove.get());
+        dropSelf(AllRegistry.Red_nether_brick_stove.get());
     }
 
     @Override

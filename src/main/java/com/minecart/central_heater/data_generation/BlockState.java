@@ -13,6 +13,6 @@ public class BlockState extends BlockStateProvider {
 
     @Override
     protected void registerStatesAndModels() {
-
+        simpleBlockWithItem(AllRegistry.Stone_tile.get(), cubeAll(AllRegistry.Stone_tile.get()));
     }
 }

@@ -1,0 +1,8 @@
+{
+  "parent": "central_heater:block/goldgrid_stove_burn",
+  "textures": {
+    "0": "minecraft:block/red_nether_bricks",
+    "4": "central_heater:block/red_nether_brick_stove_beam",
+    "particle": "minecraft:block/red_nether_bricks"
+  }
+}

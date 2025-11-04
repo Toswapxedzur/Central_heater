@@ -4,7 +4,7 @@ import com.minecart.central_heater.AllRegistry;
 import com.minecart.central_heater.block.BlastOverheaterBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.Packet;
@@ -12,32 +12,28 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.Container;
-import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.AbstractCookingRecipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.AbstractFurnaceBlock;
-import net.minecraft.world.level.block.FurnaceBlock;
-import net.minecraft.world.level.block.HopperBlock;
 import net.minecraft.world.level.block.entity.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
+import oshi.annotation.concurrent.Immutable;
 
-import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public class BlastOverheaterBlockEntity extends BlockEntity{
+
     public int litTime;
-    public int[] cookingProgress;
-    public int[] cookingTotalTime;
-    RandomizableContainerBlockEntity entity;
-    public static final int itemsCapacity = 3;
     public ItemStackHandler items = new ItemStackHandler(itemsCapacity){
         @Override
         public boolean isItemValid(int slot, ItemStack stack) {
@@ -45,12 +41,24 @@ public class BlastOverheaterBlockEntity extends BlockEntity{
         }
     };
 
+    RandomizableContainerBlockEntity entity;
+    public int[] cookingProgress;
+    public int[] cookingTotalTime;
+    public Item[] recordValidator;
+
+    public final int fuelConsumption = 5;
+    public static final int itemsCapacity = 3;
+    public static final int coolRate = 2;
+    public static final int processSpeed = 400;
+    RecipeType<? extends AbstractCookingRecipe> recipe = RecipeType.SMELTING;
+
 
     public BlastOverheaterBlockEntity(BlockPos pos, BlockState blockState) {
         super(AllRegistry.Blast_overheater_be.get(), pos, blockState);
         litTime = 0;
         cookingProgress = new int[0];
         cookingTotalTime = new int[0];
+        recordValidator = new Item[0];
         entity = null;
     }
 
@@ -58,20 +66,136 @@ public class BlastOverheaterBlockEntity extends BlockEntity{
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
-        items.deserializeNBT(registries, tag.getCompound("items"));
         this.litTime = tag.getInt("LitTime");
         this.cookingProgress = tag.getIntArray("cookingProgress");
         this.cookingTotalTime = tag.getIntArray("cookingTotalTime");
         entity = null;
+        items.deserializeNBT(registries, tag.getCompound("items"));
     }
 
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
-        tag.put("items", items.serializeNBT(registries));
         tag.putInt("LitTime", this.litTime);
         tag.putIntArray("cookingProgress", this.cookingProgress);
         tag.putIntArray("cookingTotalTime", this.cookingTotalTime);
+        tag.put("items", items.serializeNBT(registries));
+    }
+
+    public static void serverTick(Level level, BlockPos pos, BlockState state, BlastOverheaterBlockEntity entity) {
+        if(!entity.updateTarget()) {
+            level.destroyBlock(pos, true);
+            return;
+        }
+        entity.updateFuel();
+
+        for(int i=0;i<entity.entity.getContainerSize();i++){
+            if(entity.entity.getItem(i).isEmpty()){
+                entity.cookingProgress[i] = 0;
+            }else if(!entity.entity.getItem(i).is(entity.recordValidator[i])){
+                entity.cookingProgress[i] = 0;
+                entity.cookingTotalTime[i] = entity.entity.getItem(i).getCount() * processSpeed;
+            }else{
+                entity.cookingTotalTime[i] = entity.entity.getItem(i).getCount() * processSpeed;
+            }
+            entity.recordValidator[i] = entity.entity.getItem(i).copy().getItem();
+        }
+
+        RecipeHolder<? extends AbstractCookingRecipe> recipeHolder;
+        for(int i=0;i<entity.entity.getContainerSize();i++){
+            if(entity.isLit()){
+                entity.cookingProgress[i]+=1;
+                if(entity.cookingProgress[i]>=entity.cookingTotalTime[i] && !entity.entity.getItem(i).isEmpty()){
+                    recipeHolder = level.getRecipeManager().getRecipeFor(entity.recipe, new SingleRecipeInput(entity.entity.getItem(i)), level).orElse(null);
+                    if(entity.canBurn(i, recipeHolder, level.registryAccess())) {
+                        entity.burn(i, recipeHolder, level.registryAccess());
+                        entity.cookingProgress[i] = 0;
+                    }
+                }
+            }else{
+                entity.cookingProgress[i] = Math.max(0, entity.cookingProgress[i]-coolRate);
+            }
+        }
+
+        if(state.getValue(BlastOverheaterBlock.LIT) != entity.isLit()){
+            entity.update();
+        }
+    }
+
+
+
+    public void insertItem(ItemStack stack) {
+        for(int j=0;j<itemsCapacity;j++)
+            if(this.items.insertItem(j, stack, true).getCount() != stack.getCount()){
+                this.items.insertItem(j, stack.split(1), false);
+                break;
+            }
+    }
+
+    public ItemStack extractItem() {
+        for(int j=0;j<itemsCapacity;j++)
+            if(this.items.extractItem(j, 1, true) != ItemStack.EMPTY)
+                return this.items.extractItem(j, 1, false);
+        return ItemStack.EMPTY;
+    }
+
+    public void dropContent() {
+        for(int i=0;i<itemsCapacity;i++)
+            this.level.addFreshEntity(new ItemEntity(this.level, this.getBlockPos().getX()+0.5, this.getBlockPos().getY()+0.3, this.getBlockPos().getZ()+0.5, this.items.getStackInSlot(i)));
+    }
+
+    public void kindle() {
+        if(this.isLit())
+            return;
+        for(int i=0;i<itemsCapacity;i++)
+            if(this.items.getStackInSlot(i).getBurnTime(RecipeType.SMELTING) > 0){
+                double d0 = this.getBlockPos().getX();
+                double d1 = this.getBlockPos().getY();
+                double d2 = this.getBlockPos().getZ();
+                this.level.playLocalSound(d0, d1, d2, SoundEvents.FLINTANDSTEEL_USE, SoundSource.PLAYERS, 5.0f, 1.0f, false);
+
+                burnOneFuel();
+            }
+    }
+
+    public RandomizableContainerBlockEntity findBlockEntity(){
+        if(level.getBlockEntity(getBlockPos().below()) == null || level.getBlockEntity(getBlockPos().below()).isRemoved() ||
+                !(level.getBlockEntity(getBlockPos().below()) instanceof RandomizableContainerBlockEntity)){
+            return null;
+        }else{
+            return (RandomizableContainerBlockEntity) level.getBlockEntity(getBlockPos().below());
+        }
+    }
+
+    public void burnOneFuel(){
+        for(int i=0;i<itemsCapacity;i++)
+            if(this.items.getStackInSlot(i).getBurnTime(RecipeType.SMELTING) > 0){
+                ItemStack stack = this.items.getStackInSlot(i);
+                this.litTime += stack.getBurnTime(RecipeType.SMELTING);
+                if(stack.hasCraftingRemainingItem()){
+                    stack = stack.getCraftingRemainingItem();
+                }else {
+                    stack.shrink(1);
+                }
+            }
+    }
+
+    public boolean canBurn(int slot, @Nullable RecipeHolder<? extends AbstractCookingRecipe> recipe, RegistryAccess access){
+        if(recipe!=null && slot>=0 && slot<this.entity.getContainerSize()){
+            ItemStack stack = recipe.value().assemble(new SingleRecipeInput(this.entity.getItem(slot)), access);
+            return !stack.isEmpty();
+        }
+        return false;
+    }
+
+    public void burn(int slot, @Nullable RecipeHolder<? extends AbstractCookingRecipe> recipe, RegistryAccess access){
+        if(recipe!=null && canBurn(slot, recipe, access)){
+            RandomizableContainerBlockEntity target = this.entity;
+            ItemStack stack = target.getItem(slot);
+            ItemStack stack1 = recipe.value().assemble(new SingleRecipeInput(stack), access).copy();
+            stack1.setCount(stack.getCount());
+            target.setItem(slot, stack1);
+        }
     }
 
     @Override
@@ -91,76 +215,36 @@ public class BlastOverheaterBlockEntity extends BlockEntity{
         super.onDataPacket(net, pkt, lookupProvider);
     }
 
-
-    public static void serverTick(Level level, BlockPos pos, BlockState state, BlastOverheaterBlockEntity entity) {
-        if(entity.entity == null || entity.entity.isRemoved()){
-            if(findBlockEntity(level, pos) == null) {
-                level.destroyBlock(pos, true);
-            }else{
-                entity.entity = findBlockEntity(level, pos);
-                entity.cookingProgress = new int[entity.entity.getContainerSize()];
-                entity.cookingTotalTime = new int[entity.entity.getContainerSize()];
+    public boolean updateTarget(){
+        RandomizableContainerBlockEntity target = this.entity;
+        if(target == null || target.isRemoved()){
+            if(this.findBlockEntity() != null){
+                this.entity = this.findBlockEntity();
+                this.cookingProgress = new int[this.entity.getContainerSize()];
+                this.cookingTotalTime = new int[this.entity.getContainerSize()];
+                this.recordValidator = new Item[this.entity.getContainerSize()];
+                return true;
             }
+            return false;
         }
+        return true;
+    }
 
-        if(state.getValue(BlastOverheaterBlock.LIT) != entity.isLit()){
-            entity.update(entity);
+    public void updateFuel(){
+        if(this.litTime<0){
+            this.litTime = 0;
+        }else if(this.litTime<=fuelConsumption){
+            this.burnOneFuel();
         }
+        this.litTime-=fuelConsumption;
     }
-
-
-
-    public static void insertItem(BlastOverheaterBlockEntity entity, ItemStack stack) {
-        for(int j=0;j<itemsCapacity;j++)
-            if(entity.items.insertItem(j, stack, true).getCount() != stack.getCount()){
-                entity.items.insertItem(j, stack.split(1), false);
-                break;
-            }
-    }
-
-    public static ItemStack extractItem(BlastOverheaterBlockEntity entity) {
-        for(int j=0;j<itemsCapacity;j++)
-            if(entity.items.extractItem(j, 1, true) != ItemStack.EMPTY)
-                return entity.items.extractItem(j, 1, false);
-        return ItemStack.EMPTY;
-    }
-
-    public static void dropContent(BlastOverheaterBlockEntity entity) {
-        for(int i=0;i<itemsCapacity;i++)
-            entity.level.addFreshEntity(new ItemEntity(entity.level, entity.getBlockPos().getX()+0.5, entity.getBlockPos().getY()+0.3, entity.getBlockPos().getZ()+0.5, entity.items.getStackInSlot(i)));
-    }
-
-    public static void kindle(BlastOverheaterBlockEntity entity) {
-        if(entity.isLit())
-            return;
-        for(int i=0;i<itemsCapacity;i++)
-            if(entity.items.getStackInSlot(i).getBurnTime(RecipeType.SMELTING) > 0){
-                double d0 = entity.getBlockPos().getX();
-                double d1 = entity.getBlockPos().getY();
-                double d2 = entity.getBlockPos().getZ();
-
-                entity.level.playLocalSound(d0, d1, d2, SoundEvents.FLINTANDSTEEL_USE, SoundSource.PLAYERS, 2.0f, 1.0f, false);
-                entity.litTime += entity.items.getStackInSlot(i).getBurnTime(RecipeType.SMELTING);
-                entity.items.getStackInSlot(i).shrink(1);
-            }
-    }
-
 
     public boolean isLit() { return this.litTime > 0; }
 
-    public static void update(BlastOverheaterBlockEntity entity){
-        BlockState state = entity.getBlockState();
-        state = state.setValue(BlastOverheaterBlock.LIT, Boolean.valueOf(entity.isLit()));
-        setChanged(entity.level, entity.getBlockPos(), state);
-        entity.level.setBlock(entity.getBlockPos(), state, 3);
-    }
-
-    public static RandomizableContainerBlockEntity findBlockEntity(Level level, BlockPos pos){
-        if(level.getBlockEntity(pos.below()) == null || level.getBlockEntity(pos.below()).isRemoved() ||
-                !(level.getBlockEntity(pos.below()) instanceof RandomizableContainerBlockEntity)){
-            return null;
-        }else{
-            return (RandomizableContainerBlockEntity) level.getBlockEntity(pos.below());
-        }
+    public void update(){
+        BlockState state = this.getBlockState();
+        state = state.setValue(BlockStateProperties.LIT, Boolean.valueOf(this.isLit()));
+        setChanged(this.level, this.getBlockPos(), state);
+        this.level.setBlock(this.getBlockPos(), state, 3);
     }
 }

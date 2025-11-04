@@ -1,20 +1,23 @@
 {
+	"parent": "block/block",
 	"textures": {
-		"0": "central_heater:block/blast_overheater_back",
-		"1": "central_heater:block/blast_overheater_front_off",
-		"particle": "central_heater:block/blast_overheater_back"
+		"0": "central_heater:block/blast_overheater_top",
+		"1": "central_heater:block/blast_overheater_side",
+		"2": "central_heater:block/blast_overheater_front",
+		"particle": "central_heater:block/blast_overheater_top"
 	},
 	"elements": [
 		{
-			"from": [-4, -8, -4],
-			"to": [20, 5, 20],
+			"from": [-2, -9, -2],
+			"to": [18, 3, 18],
+			"rotation": {"angle": 0, "axis": "y", "origin": [-2, -9, -2]},
 			"faces": {
-				"north": {"uv": [0, 0, 6, 3.25], "texture": "#1"},
-				"east": {"uv": [0, 6, 6, 9.25], "texture": "#0"},
-				"south": {"uv": [0, 6, 6, 9.25], "texture": "#0"},
-				"west": {"uv": [0, 6, 6, 9.25], "texture": "#0"},
-				"up": {"uv": [0, 0, 6, 6], "texture": "#0"},
-				"down": {"uv": [0, 0, 6, 6], "texture": "#0"}
+				"north": {"uv": [0, 0, 16, 16], "texture": "#2"},
+				"east": {"uv": [0, 0, 16, 16], "texture": "#1"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#1"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#1"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#0"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#0"}
 			}
 		}
 	]

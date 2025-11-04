@@ -41,6 +41,15 @@ public class BlockPlacementHelper {
 
             if(player!= null) {
                 if (blockEntity instanceof RandomizableContainerBlockEntity && event.getItemStack().is(AllRegistry.Blast_overheater_item)) {
+                    if(!level.getBlockState(pos.above()).isAir())
+                        return;
+                    boolean flag=true;
+                    for(BlockPos i : BlockPos.betweenClosed(pos.offset(-1, 1, -1), pos.offset(1, 1, 1))){
+                        if(level.getBlockState(i).is(AllRegistry.Blast_overheater.get()))
+                            flag = false;
+                    }
+                    if(!flag)
+                        return;
                     ItemStack stack = event.getItemStack();
                     event.getLevel().setBlock(pos.above(), AllRegistry.Blast_overheater.get().
                             defaultBlockState().setValue(BlockStateProperties.HORIZONTAL_FACING, blockDirection), 2);

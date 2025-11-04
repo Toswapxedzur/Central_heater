@@ -1,0 +1,10 @@
+{
+  "type": "central_heater:seething",
+  "category": "blocks",
+  "cookingtime": 400,
+  "experience": 0.1,
+  "ingredient": {
+    "item": "minecraft:sand"
+  },
+  "result": "minecraft:soul_sand"
+}

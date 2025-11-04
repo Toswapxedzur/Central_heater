@@ -3,3 +3,11 @@
 /gamemode survival
 /gamemode creative
 /tp Dev 10000 100 10000
+/time set day
+/give Dev central_heater:cobble
+/give Dev central_heater:stone_brick
+/time set night
+/time set day
+/time set night
+/time set day
+/give Dev minecraft:soul_sand

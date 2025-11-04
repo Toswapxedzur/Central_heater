@@ -1,0 +1,8 @@
+{
+  "parent": "central_heater:block/stove_off",
+  "textures": {
+    "1": "central_heater:block/golden_stove_side",
+    "2": "central_heater:block/golden_stove_up",
+    "5": "central_heater:block/campfire_dust"
+  }
+}
