@@ -1,0 +1,6 @@
+// 1.21.1	2025-11-06T20:16:44.897369	Loot Tables
+2aa3edf21785b38a5a7bec847e6d5241495d5658 data/central_heater/loot_table/blocks/blast_overheater.json
+83fc1c70c9777673a2d3b2f9f3d6f1242fdffdf7 data/central_heater/loot_table/blocks/brick_stove.json
+cabea7ebb9846bb8009539468f589ad2630131f0 data/central_heater/loot_table/blocks/red_nether_brick_stove.json
+7a87dd15106bcfdd1006be28ae3b79da319db6f6 data/central_heater/loot_table/blocks/stone_stove.json
+690b6ebcaba5f108810fe76f7838a5dbf49bd909 data/central_heater/loot_table/blocks/stone_tile.json

@@ -1,0 +1,8 @@
+{
+  "parent": "central_heater:block/stove_on",
+  "textures": {
+    "2": "central_heater:block/stove_up",
+    "5": "minecraft:block/campfire_fire",
+    "6": "central_heater:block/campfire_dust"
+  }
+}

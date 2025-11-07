@@ -1,0 +1,4 @@
+// 1.21.1	2025-10-21T13:26:04.16508	Block States: central_heater
+7a48642f4ff3a739e24353744ed2dd01e4e7d293 assets/central_heater/blockstates/stone_tile.json
+838efa14ebeac8699779139680fe2a78f86dfa91 assets/central_heater/models/block/stone_tile.json
+70568b4f537017a3f13d2cd88244b1683409898e assets/central_heater/models/item/stone_tile.json

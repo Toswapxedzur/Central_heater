@@ -1,0 +1,147 @@
+---- Minecraft Crash Report ----
+// But it works on my machine.
+
+Time: 2025-10-22 21:10:48
+Description: Ticking block entity
+
+java.util.NoSuchElementException: null
+	at java.base/java.util.List.getLast(List.java:843) ~[?:?] {}
+	at TRANSFORMER/central_heater@1.0-SNAPSHOT/com.minecart.central_heater.block_entity.StoneStoveBlockEntity.burnOneFuel(StoneStoveBlockEntity.java:125) ~[%23186!/:?] {re:classloading}
+	at TRANSFORMER/central_heater@1.0-SNAPSHOT/com.minecart.central_heater.block_entity.AbstractHeaterBlockEntity.updateFuel(AbstractHeaterBlockEntity.java:101) ~[%23186!/:?] {re:classloading}
+	at TRANSFORMER/central_heater@1.0-SNAPSHOT/com.minecart.central_heater.block_entity.StoneStoveBlockEntity.serverTick(StoneStoveBlockEntity.java:53) ~[%23186!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.world.level.chunk.LevelChunk$BoundTickingBlockEntity.tick(LevelChunk.java:711) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.world.level.chunk.LevelChunk$RebindableTickingBlockEntityWrapper.tick(LevelChunk.java:788) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.world.level.Level.tickBlockEntities(Level.java:599) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.level.ServerLevel.tick(ServerLevel.java:431) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.MinecraftServer.tickChildren(MinecraftServer.java:1052) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.MinecraftServer.tickServer(MinecraftServer.java:932) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.client.server.IntegratedServer.tickServer(IntegratedServer.java:113) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.MinecraftServer.runServer(MinecraftServer.java:713) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.MinecraftServer.lambda$spin$2(MinecraftServer.java:267) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading,pl:accesstransformer:B}
+	at java.base/java.lang.Thread.run(Thread.java:1583) [?:?] {}
+
+
+A detailed walkthrough of the error, its code path and all known details is as follows:
+---------------------------------------------------------------------------------------
+
+-- Head --
+Thread: Server thread
+Stacktrace:
+	at java.base/java.util.List.getLast(List.java:843) ~[?:?] {}
+	at TRANSFORMER/central_heater@1.0-SNAPSHOT/com.minecart.central_heater.block_entity.StoneStoveBlockEntity.burnOneFuel(StoneStoveBlockEntity.java:125) ~[%23186!/:?] {re:classloading}
+	at TRANSFORMER/central_heater@1.0-SNAPSHOT/com.minecart.central_heater.block_entity.AbstractHeaterBlockEntity.updateFuel(AbstractHeaterBlockEntity.java:101) ~[%23186!/:?] {re:classloading}
+	at TRANSFORMER/central_heater@1.0-SNAPSHOT/com.minecart.central_heater.block_entity.StoneStoveBlockEntity.serverTick(StoneStoveBlockEntity.java:53) ~[%23186!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.world.level.chunk.LevelChunk$BoundTickingBlockEntity.tick(LevelChunk.java:711) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.world.level.chunk.LevelChunk$RebindableTickingBlockEntityWrapper.tick(LevelChunk.java:788) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.world.level.Level.tickBlockEntities(Level.java:599) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading,pl:accesstransformer:B}
+-- Block entity being ticked --
+Details:
+	Name: central_heater:stone_stove // com.minecart.central_heater.block_entity.StoneStoveBlockEntity
+	Block: Block{central_heater:stone_stove}[facing=north,lit=true]
+	Block location: World: (-221,74,246), Section: (at 3,10,6 in -14,4,15; chunk contains blocks -224,-64,240 to -209,319,255), Region: (-1,0; contains chunks -32,0 to -1,31, blocks -512,-64,0 to -1,319,511)
+	Block: Block{central_heater:stone_stove}[facing=north,lit=true]
+	Block location: World: (-221,74,246), Section: (at 3,10,6 in -14,4,15; chunk contains blocks -224,-64,240 to -209,319,255), Region: (-1,0; contains chunks -32,0 to -1,31, blocks -512,-64,0 to -1,319,511)
+Stacktrace:
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.world.level.chunk.LevelChunk$BoundTickingBlockEntity.tick(LevelChunk.java:711) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.world.level.chunk.LevelChunk$RebindableTickingBlockEntityWrapper.tick(LevelChunk.java:788) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.world.level.Level.tickBlockEntities(Level.java:599) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.level.ServerLevel.tick(ServerLevel.java:431) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.MinecraftServer.tickChildren(MinecraftServer.java:1052) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.MinecraftServer.tickServer(MinecraftServer.java:932) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.client.server.IntegratedServer.tickServer(IntegratedServer.java:113) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.MinecraftServer.runServer(MinecraftServer.java:713) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.MinecraftServer.lambda$spin$2(MinecraftServer.java:267) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading,pl:accesstransformer:B}
+	at java.base/java.lang.Thread.run(Thread.java:1583) [?:?] {}
+
+
+-- Affected level --
+Details:
+	All players: 1 total; [ServerPlayer['Dev'/14, l='ServerLevel[New World]', x=-220.64, y=74.00, z=244.90]]
+	Chunk stats: 1473
+	Level dimension: minecraft:overworld
+	Level spawn location: World: (0,74,-32), Section: (at 0,10,0 in 0,4,-2; chunk contains blocks 0,-64,-32 to 15,319,-17), Region: (0,-1; contains chunks 0,-32 to 31,-1, blocks 0,-64,-512 to 511,319,-1)
+	Level time: 5595 game time, 5595 day time
+	Level name: New World
+	Level game mode: Game mode: creative (ID 1). Hardcore: false. Commands: true
+	Level weather: Rain time: 157896 (now: false), thunder time: 116852 (now: false)
+	Known server brands: neoforge
+	Removed feature flags: 
+	Level was modded: true
+	Level storage version: 0x04ABD - Anvil
+	Loaded entity count: 17
+Stacktrace:
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.level.ServerLevel.fillReportDetails(ServerLevel.java:1745) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.MinecraftServer.tickChildren(MinecraftServer.java:1055) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.MinecraftServer.tickServer(MinecraftServer.java:932) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.client.server.IntegratedServer.tickServer(IntegratedServer.java:113) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.MinecraftServer.runServer(MinecraftServer.java:713) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.MinecraftServer.lambda$spin$2(MinecraftServer.java:267) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading,pl:accesstransformer:B}
+	at java.base/java.lang.Thread.run(Thread.java:1583) [?:?] {}
+
+
+-- System Details --
+Details:
+	Minecraft Version: 1.21.1
+	Minecraft Version ID: 1.21.1
+	Operating System: Mac OS X (aarch64) version 15.6.1
+	Java Version: 21.0.8, Oracle Corporation
+	Java VM Version: Java HotSpot(TM) 64-Bit Server VM (mixed mode, sharing), Oracle Corporation
+	Memory: 64931608 bytes (61 MiB) / 715128832 bytes (682 MiB) up to 4294967296 bytes (4096 MiB)
+	CPUs: 10
+	Processor Vendor: Apple Inc.
+	Processor Name: Apple M1 Pro
+	Identifier: Apple Inc. Family 0x1b588bb3 Model 0 Stepping 0
+	Microarchitecture: ARM64 SoC: Firestorm + Icestorm
+	Frequency (GHz): 3.23
+	Number of physical packages: 1
+	Number of physical CPUs: 10
+	Number of logical CPUs: 10
+	Graphics card #0 name: Apple M1 Pro
+	Graphics card #0 vendor: Apple (0x106b)
+	Graphics card #0 VRAM (MiB): 0.00
+	Graphics card #0 deviceId: unknown
+	Graphics card #0 versionInfo: unknown
+	Memory slot #0 capacity (MiB): 0.00
+	Memory slot #0 clockSpeed (GHz): 0.00
+	Memory slot #0 type: unknown
+	Virtual memory max (MiB): 19456.00
+	Virtual memory used (MiB): 12847.13
+	Swap memory total (MiB): 3072.00
+	Swap memory used (MiB): 1988.75
+	Space in storage for jna.tmpdir (MiB): <path not set>
+	Space in storage for org.lwjgl.system.SharedLibraryExtractPath (MiB): <path not set>
+	Space in storage for io.netty.native.workdir (MiB): <path not set>
+	Space in storage for java.io.tmpdir (MiB): available: 808692.94, total: 948584.19
+	Space in storage for workdir (MiB): available: 808692.94, total: 948584.19
+	JVM Flags: 0 total; 
+	Server Running: true
+	Player Count: 1 / 8; [ServerPlayer['Dev'/14, l='ServerLevel[New World]', x=-220.64, y=74.00, z=244.90]]
+	Active Data Packs: vanilla, mod_data, mod/central_heater, mod/neoforge
+	Available Data Packs: bundle, trade_rebalance, vanilla, mod/central_heater, mod/neoforge, mod_data
+	Enabled Feature Flags: minecraft:vanilla
+	World Generation: Stable
+	World Seed: -7167165276050455017
+	Type: Integrated Server (map_client.txt)
+	Is Modded: Definitely; Client brand changed to 'neoforge'; Server brand changed to 'neoforge'
+	Launched Version: 21.1.211
+	ModLauncher: 11.0.5+main.901c6ea8
+	ModLauncher launch target: forgeclientdev
+	ModLauncher services: 
+		sponge-mixin-0.15.2+mixin.0.8.7.jar mixin PLUGINSERVICE 
+		loader-4.0.42.jar slf4jfixer PLUGINSERVICE 
+		loader-4.0.42.jar runtime_enum_extender PLUGINSERVICE 
+		at-modlauncher-10.0.1.jar accesstransformer PLUGINSERVICE 
+		loader-4.0.42.jar runtimedistcleaner PLUGINSERVICE 
+		modlauncher-11.0.5.jar mixin TRANSFORMATIONSERVICE 
+		modlauncher-11.0.5.jar fml TRANSFORMATIONSERVICE 
+	FML Language Providers: 
+		javafml@4.0
+		lowcodefml@4.0
+		minecraft@4.0
+	Mod List: 
+		main                                              |central_heater                |central_heater                |1.0-SNAPSHOT        |Manifest: NOSIGNATURE
+		neoforge-21.1.211.jar                             |Minecraft                     |minecraft                     |1.21.1              |Manifest: NOSIGNATURE
+		neoforge-21.1.211.jar                             |NeoForge                      |neoforge                      |21.1.211            |Manifest: NOSIGNATURE
+	Crash Report UUID: f6cd5bbc-4447-49bf-86d0-172e46f19b50
+	FML: 4.0.42
+	NeoForge: 21.1.211

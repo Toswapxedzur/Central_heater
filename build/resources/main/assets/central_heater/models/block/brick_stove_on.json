@@ -1,0 +1,9 @@
+{
+  "parent": "central_heater:block/irongrid_stove_on",
+  "textures": {
+    "0": "minecraft:block/bricks",
+    "1": "central_heater:block/brick_stove_side",
+    "4": "central_heater:block/brick_stove_beam",
+    "particle": "minecraft:block/bricks"
+  }
+}
