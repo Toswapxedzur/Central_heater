@@ -120,6 +120,9 @@ public abstract class AbstractStoveBlockEntity extends BaseContainerBlockEntity 
             case UP -> {
                 return itemSlot;
             }
+            case DOWN -> {
+                return itemSlot;
+            }
             default -> {
                 return fuelSlot;
             }
@@ -128,8 +131,7 @@ public abstract class AbstractStoveBlockEntity extends BaseContainerBlockEntity 
 
     @Override
     public int getMaxStackSize() {
-        return 1;
-//        return Math.min(fuels.maxSlotLimit, items.maxSlotLimit);
+        return Math.min(fuels.maxSlotLimit, items.maxSlotLimit);
     }
 
     @Override
@@ -155,7 +157,7 @@ public abstract class AbstractStoveBlockEntity extends BaseContainerBlockEntity 
 
     @Override
     public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction) {
-        return true;
+        return Arrays.stream(itemSlot).anyMatch(i -> i == index);
     }
 
 

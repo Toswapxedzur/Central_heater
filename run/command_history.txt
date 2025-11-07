@@ -11,3 +11,5 @@
 /time set night
 /time set day
 /give Dev minecraft:soul_sand
+/kill @e[type=minecraft:warden]
+/time set day

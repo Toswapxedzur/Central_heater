@@ -1,18 +1,20 @@
 package com.minecart.central_heater;
 
 import com.minecart.central_heater.block.BlastOverheaterBlock;
+import com.minecart.central_heater.block.BrickStoveBlock;
 import com.minecart.central_heater.block.GoldenStoveBlock;
 import com.minecart.central_heater.block.StoneStoveBlock;
 import com.minecart.central_heater.block_entity.BlastOverheaterBlockEntity;
+import com.minecart.central_heater.block_entity.BrickStoveBlockEntity;
 import com.minecart.central_heater.block_entity.GoldenStoveBlockEntity;
 import com.minecart.central_heater.block_entity.StoneStoveBlockEntity;
 import com.minecart.central_heater.recipe.SeethingRecipe;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SimpleCookingSerializer;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -44,13 +46,19 @@ public class AllRegistry {
     public static Supplier<BlockEntityType<GoldenStoveBlockEntity>> Red_nether_brick_stove_be = BLOCK_ENTITIES.register("red_nether_brick_stove",
             ()->BlockEntityType.Builder.of(GoldenStoveBlockEntity::new, Red_nether_brick_stove.get()).build(null));
 
+    public static DeferredBlock<Block> brick_stove = BLOCKS.register("brick_stove", ()->new BrickStoveBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.BRICKS)));
+    public static DeferredItem<BlockItem> brick_stove_item = ITEMS.registerSimpleBlockItem(brick_stove);
+    public static Supplier<BlockEntityType<BrickStoveBlockEntity>> brick_stove_be = BLOCK_ENTITIES.register("brick_stove",
+            ()->BlockEntityType.Builder.of(BrickStoveBlockEntity::new, brick_stove.get()).build(null));
+
     public static DeferredBlock<Block> Stone_tile = BLOCKS.register("stone_tile", ()->new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.STONE_BRICKS)));
     public static DeferredItem<BlockItem> Stone_tile_item = ITEMS.registerSimpleBlockItem(Stone_tile);
 
     public static DeferredItem<Item> Cobble = ITEMS.registerSimpleItem("cobble", new Item.Properties());
     public static DeferredItem<Item> Stone_brick = ITEMS.registerSimpleItem("stone_brick", new Item.Properties());
 
-    public static DeferredHolder<RecipeType<?>, RecipeType<SeethingRecipe>> Seething = RECIPE_TYPES.register("seething", ()->new RecipeType<>(){
+    public static DeferredHolder<RecipeSerializer<?>, RecipeSerializer<SeethingRecipe>> Seething_ser = RECIPE_SERIALIZERS.register("seething", ()->new SimpleCookingSerializer<>(SeethingRecipe::new, 400));
+    public static DeferredHolder<RecipeType<?>, RecipeType<SeethingRecipe>> Seething = RECIPE_TYPES.register("seething", ()->new RecipeType<SeethingRecipe>(){
         public String toString(){ return "seething"; }});
 
     public static void register(IEventBus modEventbus){

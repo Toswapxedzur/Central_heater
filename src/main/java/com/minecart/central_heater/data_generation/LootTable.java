@@ -23,6 +23,7 @@ public class LootTable extends BlockLootSubProvider {
         dropSelf(AllRegistry.Stone_tile.get());
         dropSelf(AllRegistry.Stone_stove.get());
         dropSelf(AllRegistry.Red_nether_brick_stove.get());
+        dropSelf(AllRegistry.brick_stove.get());
     }
 
     @Override

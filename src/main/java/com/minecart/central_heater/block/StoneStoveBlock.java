@@ -133,16 +133,10 @@ public class StoneStoveBlock extends BaseEntityBlock {
         if(level.isClientSide)
             return;
         if (!state.is(newState.getBlock())) {
-            BlockEntity blockentity = level.getBlockEntity(pos);
-            if (blockentity instanceof StoneStoveBlockEntity stoneStoveBlockEntity) {
-                if (level instanceof ServerLevel) {
-                    stoneStoveBlockEntity.dropContent();
-                }
-                super.onRemove(state, level, pos, newState, movedByPiston);
-                level.updateNeighbourForOutputSignal(pos, this);
-            } else {
-                super.onRemove(state, level, pos, newState, movedByPiston);
-            }
+            if (level.getBlockEntity(pos) instanceof StoneStoveBlockEntity entity)
+                entity.dropContent();
+            super.onRemove(state, level, pos, newState, movedByPiston);
+            level.updateNeighbourForOutputSignal(pos, this);
         }
     }
 

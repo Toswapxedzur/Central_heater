@@ -13,8 +13,11 @@ public class AllUtil {
             event.accept(AllRegistry.Blast_overheater_item.asItem());
             event.accept(AllRegistry.Stone_stove_item.asItem());
             event.accept(AllRegistry.Red_nether_brick_stove_item.asItem());
+            event.accept(AllRegistry.brick_stove_item.asItem());
         }else if(event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS){
             event.accept(AllRegistry.Stone_tile_item.asItem());
+        }else if(event.getTabKey() == CreativeModeTabs.INGREDIENTS){
+            event.accept(AllRegistry.Cobble.asItem());
         }
     }
 
@@ -26,7 +29,7 @@ public class AllUtil {
         return Minecraft.getInstance().getItemRenderer().getItemModelShaper().getItemModel(item).isGui3d();
     }
 
-    public static Integer itemSizeNumberFunction(ItemStack stack){
+    public static int itemSizeNumberFunction(ItemStack stack){
         if(isFlatItem(stack)){
             return 6;
         }

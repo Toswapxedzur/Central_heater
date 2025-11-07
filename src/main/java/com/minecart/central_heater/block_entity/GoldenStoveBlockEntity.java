@@ -7,15 +7,22 @@ import com.minecart.central_heater.util.SoulFireState;
 import com.minecart.central_heater.util.StackableItemStackHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.AbstractCookingRecipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HopperBlock;
@@ -29,10 +36,11 @@ import org.jetbrains.annotations.Nullable;
 public class GoldenStoveBlockEntity extends AbstractStoveBlockEntity {
     public int litTime;
     public SoulFireState litState;
+    public SoulFireState litStateValidator;
 
     public int[] cookingProgress;
     public int[] cookingTotalTime;
-    public Item[] recordValidator;
+    public NonNullList<ItemStack> recordValidator;
 
     public final int fuelConsumption = 3;
     public final int soulFuelConsumption = 15;
@@ -42,11 +50,12 @@ public class GoldenStoveBlockEntity extends AbstractStoveBlockEntity {
     public GoldenStoveBlockEntity(BlockPos pos, BlockState blockState) {
         super(AllRegistry.Red_nether_brick_stove_be.get(), pos, blockState, 4,
                 stack -> stack.getBurnTime(RecipeType.SMELTING) != 0 || FuelMap.getSoulBurnTime(stack) != 0, 9);
-        litTime = 0;
         litState = SoulFireState.NONE;
+        litTime = 0;
+        litStateValidator = SoulFireState.NONE;
         cookingProgress = new int[itemCapacity];
         cookingTotalTime = new int[itemCapacity];
-        recordValidator = new Item[itemCapacity];
+        recordValidator = NonNullList.withSize(itemCapacity, ItemStack.EMPTY);
     }
 
     @Override
@@ -54,8 +63,10 @@ public class GoldenStoveBlockEntity extends AbstractStoveBlockEntity {
         super.loadAdditional(tag, registries);
         litTime = tag.getInt("litTime");
         litState = SoulFireState.func.apply(tag.getString("litState"));
+        litStateValidator = SoulFireState.func.apply(tag.getString("litStateValidator"));
         cookingProgress = tag.getIntArray("cookingProgress");
         cookingTotalTime = tag.getIntArray("cookingTotalTime");
+        ContainerHelper.loadAllItems(tag.getCompound("validator"), recordValidator, registries);
     }
 
     @Override
@@ -63,8 +74,12 @@ public class GoldenStoveBlockEntity extends AbstractStoveBlockEntity {
         super.saveAdditional(tag, registries);
         tag.putInt("litTime", litTime);
         tag.putString("litState", litState.getSerializedName());
+        tag.putString("litStateValidator", litStateValidator.getSerializedName());
         tag.putIntArray("cookingProgress", cookingProgress);
         tag.putIntArray("cookingTotalTime", cookingTotalTime);
+        CompoundTag validatorTag = new CompoundTag();
+        ContainerHelper.saveAllItems(validatorTag, recordValidator, registries);
+        tag.put("validator", validatorTag);
     }
 
     @Override
@@ -74,6 +89,38 @@ public class GoldenStoveBlockEntity extends AbstractStoveBlockEntity {
 
     public static void serverTick(Level level, BlockPos pos, BlockState state, GoldenStoveBlockEntity entity) {
         entity.updateFuel();
+
+        for (int i = 0; i < entity.itemCapacity; i++) {
+            if(!entity.isLit())
+                entity.cookingProgress[i] = Math.max(0, entity.cookingProgress[i] - coolRate);
+            if (ItemStack.matches(entity.items.getStackInSlot(i), entity.recordValidator.get(i))) {
+                if(entity.isLit())
+                    entity.cookingProgress[i] += 1;
+            }else if(ItemStack.isSameItemSameComponents(entity.items.getStackInSlot(i), entity.recordValidator.get(i))){
+                entity.cookingTotalTime[i] = entity.items.getStackInSlot(i).getCount() * processSpeed;
+            }else{
+                entity.cookingProgress[i] = 0;
+                entity.cookingTotalTime[i] = entity.items.getStackInSlot(i).getCount() * processSpeed;
+            }
+            if(entity.litState.equals(SoulFireState.SOUL) && !entity.litStateValidator.equals(SoulFireState.SOUL)) {
+                entity.cookingProgress[i] = 0;
+            }
+            entity.recordValidator.set(i, entity.items.getStackInSlot(i).copy());
+        }
+        entity.litStateValidator = entity.litState;
+
+        for (int i = 0; i < entity.itemCapacity; i++) {
+            if (entity.cookingTotalTime[i] != 0 && entity.cookingProgress[i] >= entity.cookingTotalTime[i] && !entity.items.getStackInSlot(i).isEmpty()) {
+                RecipeHolder<? extends AbstractCookingRecipe> recipeHolder;
+                if(entity.litState.equals(SoulFireState.SOUL))
+                    recipeHolder = level.getRecipeManager().getRecipeFor(AllRegistry.Seething.get(), new SingleRecipeInput(entity.items.getStackInSlot(i)), level).orElse(null);
+                else
+                    recipeHolder = level.getRecipeManager().getRecipeFor(RecipeType.SMELTING, new SingleRecipeInput(entity.items.getStackInSlot(i)), level).orElse(null);
+                if (entity.burn(i, recipeHolder, level.registryAccess())) {
+                    entity.cookingProgress[i] = 0;
+                }
+            }
+        }
 
         if(!state.getValue(AllConstants.LIT_SOUL).equals(entity.litState)){
             entity.update();
@@ -138,6 +185,17 @@ public class GoldenStoveBlockEntity extends AbstractStoveBlockEntity {
         if (stack.hasCraftingRemainingItem()) {
             fuels.insertItem(stack.getCraftingRemainingItem(), false);
         }
+    }
+
+    public boolean burn(int slot, @Nullable RecipeHolder<? extends AbstractCookingRecipe> recipe, RegistryAccess access){
+        if(recipe!=null){
+            ItemStack stack = items.getStackInSlot(slot);
+            ItemStack stack1 = recipe.value().assemble(new SingleRecipeInput(stack), access).copy();
+            stack1.setCount(stack.getCount());
+            items.setStackInSlot(slot, stack1);
+            return true;
+        }
+        return false;
     }
 
     public void update(){

@@ -2,6 +2,7 @@
   "parent": "central_heater:block/irongrid_stove_off",
   "textures": {
     "0": "central_heater:block/stone_tile",
+    "1": "central_heater:block/stove_side",
     "4": "central_heater:block/stove_beam",
     "particle": "central_heater:block/stone_tile"
   }

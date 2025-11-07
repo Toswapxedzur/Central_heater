@@ -12,17 +12,14 @@ public class FuelMap {
     public static Map<Item, Integer> soul_fuel_map;
 
     public static void initializeSoulFuelMap(){
-        if(soul_fuel_map != null)
-            return;
         soul_fuel_map = new HashMap<>();
-        soul_fuel_map.put(Items.SOUL_SAND, 20);
-        soul_fuel_map.put(Items.SOUL_SOIL, 10);
-        soul_fuel_map.put(Items.SOUL_TORCH, 10);
-        soul_fuel_map.put(Items.SOUL_CAMPFIRE, 40);
+        soul_fuel_map.put(Items.SOUL_SAND, 400);
+        soul_fuel_map.put(Items.SOUL_SOIL, 200);
+        soul_fuel_map.put(Items.SOUL_TORCH, 100);
+        soul_fuel_map.put(Items.SOUL_CAMPFIRE, 800);
     }
 
     public static int getSoulBurnTime(ItemStack stack){
-        initializeSoulFuelMap();
         return soul_fuel_map.getOrDefault(stack.getItem(), 0);
     }
 

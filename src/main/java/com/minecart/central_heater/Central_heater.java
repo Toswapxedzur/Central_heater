@@ -1,8 +1,10 @@
 package com.minecart.central_heater;
 
+import com.minecart.central_heater.block_entity_renderer.BrickStoveBlockEntityRenderer;
 import com.minecart.central_heater.block_entity_renderer.GoldenStoveBlockEntityRenderer;
 import com.minecart.central_heater.block_entity_renderer.StoneStoveBlockEntityRenderer;
 import com.minecart.central_heater.util.AllUtil;
+import com.minecart.central_heater.util.FuelMap;
 import com.mojang.logging.LogUtils;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -40,6 +42,7 @@ public class Central_heater {
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
+        FuelMap.initializeSoulFuelMap();
     }
 
     @SubscribeEvent
@@ -56,6 +59,7 @@ public class Central_heater {
         public static void onRegisterBlockEntityRenderer(EntityRenderersEvent.RegisterRenderers event){
             event.registerBlockEntityRenderer(AllRegistry.Stone_stove_be.get(), StoneStoveBlockEntityRenderer::new);
             event.registerBlockEntityRenderer(AllRegistry.Red_nether_brick_stove_be.get(), GoldenStoveBlockEntityRenderer::new);
+            event.registerBlockEntityRenderer(AllRegistry.brick_stove_be.get(), BrickStoveBlockEntityRenderer::new);
         }
     }
 }

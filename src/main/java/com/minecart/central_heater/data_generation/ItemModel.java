@@ -16,6 +16,7 @@ public class ItemModel extends ItemModelProvider {
         withExistingParent("blast_overheater", modLoc("block/blast_overheater_off"));
         withExistingParent("stone_stove", modLoc("block/stone_stove_off"));
         withExistingParent("red_nether_brick_stove", modLoc("block/red_nether_brick_stove_off"));
+        withExistingParent("brick_stove", modLoc("block/brick_stove_off"));
         basicItem(AllRegistry.Cobble.asItem());
         basicItem(AllRegistry.Stone_brick.asItem());
     }
