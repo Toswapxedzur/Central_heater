@@ -9,33 +9,18 @@ import java.util.function.Function;
 
 public class StackableItemStackHandler extends ItemStackHandler {
     public int maxSlotLimit;
-    Optional<Function<ItemStack, Integer>> slotLimit = Optional.empty();
 
     public void set(NonNullList<ItemStack> stacks){
         super.stacks = stacks;
     }
 
-    public StackableItemStackHandler(int size, int maxSlotLimit, Function<ItemStack, Integer> slotLimit){
-        super(size);
-        this.maxSlotLimit = maxSlotLimit;
-        this.slotLimit = Optional.of(slotLimit);
-    }
-
     public StackableItemStackHandler(int size, int maxSlotLimit){
         super(size);
         this.maxSlotLimit = maxSlotLimit;
-        this.slotLimit = Optional.empty();
     }
 
     @Override
     public int getSlotLimit(int slot) { return maxSlotLimit; }
-
-    @Override
-    public int getStackLimit(int slot, ItemStack stack) {
-        if(slotLimit.isPresent())
-            return Math.min(super.getStackLimit(slot, stack), slotLimit.get().apply(stack));
-        return super.getStackLimit(slot, stack);
-    }
 
     public NonNullList<ItemStack> getStacks(){
         return super.stacks;

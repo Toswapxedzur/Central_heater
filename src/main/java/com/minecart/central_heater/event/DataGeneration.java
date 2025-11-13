@@ -1,8 +1,6 @@
 package com.minecart.central_heater.event;
 
-import com.minecart.central_heater.data_generation.BlockState;
-import com.minecart.central_heater.data_generation.ItemModel;
-import com.minecart.central_heater.data_generation.LootTable;
+import com.minecart.central_heater.data_generation.*;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
@@ -36,5 +34,10 @@ public class DataGeneration {
 
         generator.addProvider(event.includeClient(), new BlockState(output, fileHelper));
         generator.addProvider(event.includeClient(), new ItemModel(output, fileHelper));
+        generator.addProvider(event.includeClient(), new BlockModel(output, fileHelper));
+        generator.addProvider(event.includeServer(), new Recipe(output, lookUpProvider));
+        BlockTag blockTag = new BlockTag(output, lookUpProvider, fileHelper);
+        generator.addProvider(event.includeServer(), blockTag);
+        generator.addProvider(event.includeServer(), new ItemTag(output, lookUpProvider, blockTag.contentsGetter()));
     }
 }

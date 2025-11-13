@@ -1,23 +1,24 @@
 package com.minecart.central_heater.block_entity;
 
 import com.minecart.central_heater.AllRegistry;
+import com.minecart.central_heater.block.BrickStoveBlock;
+import com.minecart.central_heater.block.GoldenStoveBlock;
 import com.minecart.central_heater.util.AllConstants;
 import com.minecart.central_heater.util.FuelMap;
 import com.minecart.central_heater.util.SoulFireState;
-import com.minecart.central_heater.util.StackableItemStackHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.ContainerHelper;
-import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -25,11 +26,6 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.HopperBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.FurnaceBlockEntity;
-import net.minecraft.world.level.block.entity.HopperBlockEntity;
-import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,12 +39,12 @@ public class GoldenStoveBlockEntity extends AbstractStoveBlockEntity {
     public NonNullList<ItemStack> recordValidator;
 
     public final int fuelConsumption = 3;
-    public final int soulFuelConsumption = 15;
+    public final int soulFuelConsumption = 7;
     public static final int coolRate = 2;
-    public static final int processSpeed = 600;
+    public static final int processSpeed = 400;
 
     public GoldenStoveBlockEntity(BlockPos pos, BlockState blockState) {
-        super(AllRegistry.Red_nether_brick_stove_be.get(), pos, blockState, 4,
+        super(AllRegistry.red_nether_brick_stove_be.get(), pos, blockState, 4,
                 stack -> stack.getBurnTime(RecipeType.SMELTING) != 0 || FuelMap.getSoulBurnTime(stack) != 0, 9);
         litState = SoulFireState.NONE;
         litTime = 0;
@@ -124,6 +120,21 @@ public class GoldenStoveBlockEntity extends AbstractStoveBlockEntity {
 
         if(!state.getValue(AllConstants.LIT_SOUL).equals(entity.litState)){
             entity.update();
+        }
+    }
+
+    public static void clientTick(Level level, BlockPos pos, BlockState state, GoldenStoveBlockEntity entity){
+        RandomSource randomsource = level.random;
+        if(!state.getValue(GoldenStoveBlock.LIT_SOUL).equals(SoulFireState.NONE)) {
+            if (randomsource.nextFloat() < 0.11F) {
+                for (int i = 0; i < randomsource.nextInt(2) + 2; i++) {
+                    level.addAlwaysVisibleParticle(ParticleTypes.CAMPFIRE_COSY_SMOKE,true,
+                            (double)pos.getX() + 0.5 + randomsource.nextDouble() / 3.0 * (double)(randomsource.nextBoolean() ? 1 : -1),
+                            (double)pos.getY() + randomsource.nextDouble() + randomsource.nextDouble(),
+                            (double)pos.getZ() + 0.5 + randomsource.nextDouble() / 3.0 * (double)(randomsource.nextBoolean() ? 1 : -1),
+                            0.0, 0.07, 0.0);
+                }
+            }
         }
     }
 

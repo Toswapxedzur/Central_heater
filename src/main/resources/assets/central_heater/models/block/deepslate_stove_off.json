@@ -1,0 +1,11 @@
+{
+  "parent": "central_heater:block/stove_off",
+  "textures": {
+    "0": "central_heater:block/deepslate_brick_tile",
+    "1": "central_heater:block/deepslate_stove_side",
+    "2": "central_heater:block/iron_grid",
+    "4": "central_heater:block/deepslate_stove_front",
+    "5": "central_heater:block/campfire_dust",
+    "particle": "central_heater:block/deepslate_brick_tile"
+  }
+}

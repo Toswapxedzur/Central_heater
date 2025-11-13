@@ -4,7 +4,10 @@
   "package": "com.minecart.central_heater.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "HopperBlockEntityMixin"
+    "HopperBlockEntityMixin",
+    "CampFireBlockMixin",
+    "CampfireBlockEntityMixin",
+    "SimpleCookingRecipeBuilderMixin"
   ],
   "client": [
   ],

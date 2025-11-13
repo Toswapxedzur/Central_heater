@@ -135,11 +135,6 @@ public abstract class AbstractStoveBlockEntity extends BaseContainerBlockEntity 
     }
 
     @Override
-    public int getMaxStackSize(ItemStack stack) {
-        return Math.min(super.getMaxStackSize(stack), Math.min(fuels.getStackLimit(0, stack), items.getStackLimit(0, stack)));
-    }
-
-    @Override
     public boolean canPlaceItemThroughFace(int index, ItemStack itemStack, @Nullable Direction direction) {
         boolean flag = false;
         for(int i : getSlotsForFace(direction))

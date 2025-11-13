@@ -13,6 +13,15 @@ public class BlockState extends BlockStateProvider {
 
     @Override
     protected void registerStatesAndModels() {
-        simpleBlockWithItem(AllRegistry.Stone_tile.get(), cubeAll(AllRegistry.Stone_tile.get()));
+        simpleBlockWithItem(AllRegistry.stone_brick_tile.get(), cubeAll(AllRegistry.stone_brick_tile.get()));
+        simpleBlockWithItem(AllRegistry.deepslate_brick_tile.get(), cubeAll(AllRegistry.deepslate_brick_tile.get()));
+
+        stairsBlock(AllRegistry.stone_brick_tile_stair.get(), blockTexture(AllRegistry.stone_brick_tile.get()));
+        slabBlock(AllRegistry.stone_brick_tile_slab.get(), blockTexture(AllRegistry.stone_brick_tile.get()), blockTexture(AllRegistry.stone_brick_tile.get()));
+        wallBlock(AllRegistry.stone_brick_tile_wall.get(), blockTexture(AllRegistry.stone_brick_tile.get()));
+
+        stairsBlock(AllRegistry.deepslate_brick_tile_stair.get(), blockTexture(AllRegistry.deepslate_brick_tile.get()));
+        slabBlock(AllRegistry.deepslate_brick_tile_slab.get(), blockTexture(AllRegistry.deepslate_brick_tile.get()), blockTexture(AllRegistry.deepslate_brick_tile.get()));
+        wallBlock(AllRegistry.deepslate_brick_tile_wall.get(), blockTexture(AllRegistry.deepslate_brick_tile.get()));
     }
 }

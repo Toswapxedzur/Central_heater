@@ -1,6 +1,7 @@
 package com.minecart.central_heater;
 
 import com.minecart.central_heater.block_entity_renderer.BrickStoveBlockEntityRenderer;
+import com.minecart.central_heater.block_entity_renderer.BurnableCampfireBlockEntityRenderer;
 import com.minecart.central_heater.block_entity_renderer.GoldenStoveBlockEntityRenderer;
 import com.minecart.central_heater.block_entity_renderer.StoneStoveBlockEntityRenderer;
 import com.minecart.central_heater.util.AllUtil;
@@ -57,9 +58,10 @@ public class Central_heater {
 
         @SubscribeEvent
         public static void onRegisterBlockEntityRenderer(EntityRenderersEvent.RegisterRenderers event){
-            event.registerBlockEntityRenderer(AllRegistry.Stone_stove_be.get(), StoneStoveBlockEntityRenderer::new);
-            event.registerBlockEntityRenderer(AllRegistry.Red_nether_brick_stove_be.get(), GoldenStoveBlockEntityRenderer::new);
+            event.registerBlockEntityRenderer(AllRegistry.stone_stove_be.get(), StoneStoveBlockEntityRenderer::new);
+            event.registerBlockEntityRenderer(AllRegistry.red_nether_brick_stove_be.get(), GoldenStoveBlockEntityRenderer::new);
             event.registerBlockEntityRenderer(AllRegistry.brick_stove_be.get(), BrickStoveBlockEntityRenderer::new);
+            event.registerBlockEntityRenderer(AllRegistry.burnable_campfire.get(), BurnableCampfireBlockEntityRenderer::new);
         }
     }
 }

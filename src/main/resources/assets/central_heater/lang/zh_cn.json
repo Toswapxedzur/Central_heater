@@ -1,0 +1,26 @@
+{
+  "block.central_heater.stone_stove": "石砖炉",
+  "block.central_heater.deepslate_stove": "深板岩砖炉",
+  "block.central_heater.brick_stove": "砖炉",
+  "block.central_heater.mud_brick_stove": "泥砖炉",
+  "block.central_heater.nether_brick_stove": "下界砖炉",
+  "block.central_heater.red_nether_brick_stove": "红色下界砖炉",
+
+  "block.central_heater.stone_brick_tile": "石砖瓦",
+  "block.central_heater.stone_brick_tile_stair": "石砖瓦楼梯",
+  "block.central_heater.stone_brick_tile_slab": "石砖瓦台阶",
+  "block.central_heater.stone_brick_tile_wall": "石砖瓦墙",
+  "block.central_heater.deepslate_brick_tile": "深板岩砖瓦",
+  "block.central_heater.deepslate_brick_tile_stair": "深板岩砖瓦楼梯",
+  "block.central_heater.deepslate_brick_tile_slab": "深板岩砖瓦台阶",
+  "block.central_heater.deepslate_brick_tile_wall": "深板岩砖瓦墙",
+  "block.central_heater.gold_bars": "金栏杆",
+
+  "item.central_heater.cobble": "鹅卵石",
+  "item.central_heater.deepslate_cobble": "深板岩卵石",
+  "item.central_heater.stone_brick": "石砖",
+  "item.central_heater.mud_brick": "泥砖",
+  "item.central_heater.red_nether_brick": "红色下界砖",
+  "item.central_heater.deepslate_brick": "深板岩砖",
+  "item.central_heater.diamond_shard": "钻石碎片"
+}

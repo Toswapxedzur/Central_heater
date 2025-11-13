@@ -7,7 +7,7 @@ Description: Unexpected error
 java.lang.NullPointerException: Trying to access unbound value: ResourceKey[minecraft:block_entity_type / central_heater:blast_overheater_be]
 	at TRANSFORMER/neoforge@21.1.211/net.neoforged.neoforge.registries.DeferredHolder.value(DeferredHolder.java:103) ~[neoforge-21.1.211.jar%23185!/:?] {re:classloading}
 	at TRANSFORMER/neoforge@21.1.211/net.neoforged.neoforge.registries.DeferredHolder.get(DeferredHolder.java:117) ~[neoforge-21.1.211.jar%23185!/:?] {re:classloading}
-	at TRANSFORMER/central_heater@1.0-SNAPSHOT/com.minecart.central_heater.block_entity.BlastOverheaterBlockEntity.<init>(BlastOverheaterBlockEntity.java:22) ~[%23186!/:?] {re:classloading}
+	at TRANSFORMER/central_heater@1.0-SNAPSHOT/com.minecart.central_heater.bin.BlastOverheaterBlockEntity.<init>(BlastOverheaterBlockEntity.java:22) ~[%23186!/:?] {re:classloading}
 	at TRANSFORMER/central_heater@1.0-SNAPSHOT/com.minecart.central_heater.block.BlastOverheaterBlock.newBlockEntity(BlastOverheaterBlock.java:40) ~[%23186!/:?] {re:classloading}
 	at TRANSFORMER/minecraft@1.21.1/net.minecraft.world.level.chunk.LevelChunk.setBlockState(LevelChunk.java:294) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading}
 	at TRANSFORMER/minecraft@1.21.1/net.minecraft.world.level.Level.setBlock(Level.java:253) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading,pl:accesstransformer:B}
@@ -57,7 +57,7 @@ Thread: Render thread
 Stacktrace:
 	at TRANSFORMER/neoforge@21.1.211/net.neoforged.neoforge.registries.DeferredHolder.value(DeferredHolder.java:103) ~[neoforge-21.1.211.jar%23185!/:?] {re:classloading}
 	at TRANSFORMER/neoforge@21.1.211/net.neoforged.neoforge.registries.DeferredHolder.get(DeferredHolder.java:117) ~[neoforge-21.1.211.jar%23185!/:?] {re:classloading}
-	at TRANSFORMER/central_heater@1.0-SNAPSHOT/com.minecart.central_heater.block_entity.BlastOverheaterBlockEntity.<init>(BlastOverheaterBlockEntity.java:22) ~[%23186!/:?] {re:classloading}
+	at TRANSFORMER/central_heater@1.0-SNAPSHOT/com.minecart.central_heater.bin.BlastOverheaterBlockEntity.<init>(BlastOverheaterBlockEntity.java:22) ~[%23186!/:?] {re:classloading}
 	at TRANSFORMER/central_heater@1.0-SNAPSHOT/com.minecart.central_heater.block.BlastOverheaterBlock.newBlockEntity(BlastOverheaterBlock.java:40) ~[%23186!/:?] {re:classloading}
 	at TRANSFORMER/minecraft@1.21.1/net.minecraft.world.level.chunk.LevelChunk.setBlockState(LevelChunk.java:294) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading}
 	at TRANSFORMER/minecraft@1.21.1/net.minecraft.world.level.Level.setBlock(Level.java:253) ~[neoforge-21.1.211.jar%23184!/:?] {re:classloading,pl:accesstransformer:B}

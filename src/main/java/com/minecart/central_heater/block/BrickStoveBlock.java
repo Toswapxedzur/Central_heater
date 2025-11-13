@@ -8,10 +8,17 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.SimpleMapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -26,6 +33,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -92,8 +100,11 @@ public class BrickStoveBlock extends BaseEntityBlock {
 
     @Override
     public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
-        return !level.isClientSide && blockEntityType.equals(AllRegistry.brick_stove_be.get()) ?
-                 createTickerHelper(blockEntityType, AllRegistry.brick_stove_be.get(), BrickStoveBlockEntity::serverTick) : null;
+        if(level.isClientSide){
+            return createTickerHelper(blockEntityType, AllRegistry.brick_stove_be.get(), BrickStoveBlockEntity::clientTick);
+        }else{
+            return createTickerHelper(blockEntityType, AllRegistry.brick_stove_be.get(), BrickStoveBlockEntity::serverTick);
+        }
     }
 
     @Override
@@ -130,6 +141,74 @@ public class BrickStoveBlock extends BaseEntityBlock {
                 entity.dropContent();
             super.onRemove(state, level, pos, newState, movedByPiston);
             level.updateNeighbourForOutputSignal(pos, this);
+        }
+    }
+
+    @Override
+    protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
+        return !state.getValue(LIT).booleanValue();
+    }
+
+    @Override
+    protected void onProjectileHit(Level level, BlockState state, BlockHitResult hit, Projectile projectile) {
+        BlockPos blockpos = hit.getBlockPos();
+        if (!level.isClientSide && projectile.isOnFire() && projectile.mayInteract(level, blockpos) &&
+                level.getBlockEntity(hit.getBlockPos()) instanceof BrickStoveBlockEntity entity && !entity.isLit()) {
+            entity.kindle();
+        }
+    }
+
+    @Override
+    public void stepOn(Level level, BlockPos pos, BlockState state, Entity entity) {
+        if (state.getValue(LIT) && entity instanceof LivingEntity) {
+            entity.hurt(level.damageSources().campfire(), (float)2.0f);
+        }
+        super.stepOn(level, pos, state, entity);
+    }
+
+    @Override
+    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
+        if (state.getValue(LIT)) {
+            double d0 = (double)pos.getX() + 0.5;
+            double d1 = (double)pos.getY() + 0.75;
+            double d2 = (double)pos.getZ() + 0.5;
+
+            if (random.nextInt(10) == 0) {
+                level.playLocalSound(d0, d1, d2, SoundEvents.CAMPFIRE_CRACKLE, SoundSource.BLOCKS,
+                        0.5F + random.nextFloat(), random.nextFloat() * 0.8F + 1F, false);
+            }
+
+            for(int i=0;i<random.nextIntBetweenInclusive(2,4);i++){
+                level.addAlwaysVisibleParticle(ParticleTypes.SMOKE,
+                        d0 + random.nextDouble() / 3.0 * (random.nextBoolean() ? 1 : -1),
+                        d1 + random.nextDouble() * 0.5,
+                        d2 + random.nextDouble() / 3.0 * (random.nextBoolean() ? 1 : -1),
+                        0.0, 0.07, 0.0);
+            }
+
+            for(int i=0;i<random.nextIntBetweenInclusive(1,2);i++){
+                level.addParticle(ParticleTypes.WHITE_SMOKE,
+                        d0 + random.nextDouble() / 3.0 * (random.nextBoolean() ? 1 : -1),
+                        d1 + random.nextDouble() * 0.5,
+                        d2 + random.nextDouble() / 3.0 * (random.nextBoolean() ? 1 : -1),
+                        0.0, 0.07, 0.0);
+            }
+
+            for(int i=0;i<random.nextIntBetweenInclusive(0,2);i++){
+                level.addParticle(ParticleTypes.LARGE_SMOKE,
+                        d0 + random.nextDouble() / 3.0 * (random.nextBoolean() ? 1 : -1),
+                        d1 + random.nextDouble() * 0.5,
+                        d2 + random.nextDouble() / 3.0 * (random.nextBoolean() ? 1 : -1),
+                        0.0, 0.07, 0.0);
+            }
+
+            for(int i=0;i<random.nextIntBetweenInclusive(0,2);i++){
+                level.addParticle(ParticleTypes.CAMPFIRE_COSY_SMOKE,
+                        d0 + random.nextDouble() / 3.0 * (random.nextBoolean() ? 1 : -1),
+                        d1 + random.nextDouble() * 0.5,
+                        d2 + random.nextDouble() / 3.0 * (random.nextBoolean() ? 1 : -1),
+                        0.0, 0.07, 0.0);
+            }
         }
     }
 }

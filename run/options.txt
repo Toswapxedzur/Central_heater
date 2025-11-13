@@ -51,7 +51,7 @@ narratorHotkey:true
 resourcePacks:[]
 incompatibleResourcePacks:[]
 lastServer:
-lang:en_us
+lang:zh_cn
 chatVisibility:0
 chatOpacity:1.0
 chatLineSpacing:0.0
@@ -78,7 +78,7 @@ glDebugVerbosity:1
 skipMultiplayerWarning:false
 hideMatchedNames:true
 joinedFirstServer:false
-hideBundleTutorial:false
+hideBundleTutorial:true
 syncChunkWrites:false
 showAutosaveIndicator:true
 allowServerListing:true

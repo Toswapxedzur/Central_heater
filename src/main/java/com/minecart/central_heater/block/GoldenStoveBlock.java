@@ -1,6 +1,7 @@
 package com.minecart.central_heater.block;
 
 import com.minecart.central_heater.AllRegistry;
+import com.minecart.central_heater.block_entity.BrickStoveBlockEntity;
 import com.minecart.central_heater.block_entity.GoldenStoveBlockEntity;
 import com.minecart.central_heater.util.AllConstants;
 import com.minecart.central_heater.util.SoulFireState;
@@ -14,7 +15,12 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -24,12 +30,12 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -100,7 +106,11 @@ public class GoldenStoveBlock extends BaseEntityBlock {
 
     @Override
     public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
-        return level.isClientSide ? null : createTickerHelper(blockEntityType, AllRegistry.Red_nether_brick_stove_be.get(), GoldenStoveBlockEntity::serverTick);
+        if(level.isClientSide){
+            return createTickerHelper(blockEntityType, AllRegistry.red_nether_brick_stove_be.get(), GoldenStoveBlockEntity::clientTick);
+        }else{
+            return createTickerHelper(blockEntityType, AllRegistry.red_nether_brick_stove_be.get(), GoldenStoveBlockEntity::serverTick);
+        }
     }
 
 
@@ -141,35 +151,98 @@ public class GoldenStoveBlock extends BaseEntityBlock {
         }
     }
 
+    @Override
+    protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
+        return !state.getValue(AllConstants.LIT_SOUL).equals(SoulFireState.NONE);
+    }
+
+    @Override
+    protected void onProjectileHit(Level level, BlockState state, BlockHitResult hit, Projectile projectile) {
+        BlockPos blockpos = hit.getBlockPos();
+        if (!level.isClientSide && projectile.isOnFire() && projectile.mayInteract(level, blockpos) &&
+                level.getBlockEntity(hit.getBlockPos()) instanceof GoldenStoveBlockEntity entity && !entity.isLit()) {
+            entity.kindle();
+        }
+    }
+
+    @Override
+    public void stepOn(Level level, BlockPos pos, BlockState state, Entity entity) {
+        if (state.getValue(AllConstants.LIT_SOUL).equals(SoulFireState.BURN) && entity instanceof LivingEntity) {
+            entity.hurt(level.damageSources().campfire(), (float)2.0f);
+        }
+        if (state.getValue(AllConstants.LIT_SOUL).equals(SoulFireState.SOUL) && entity instanceof LivingEntity livingEntity) {
+            livingEntity.hurt(level.damageSources().campfire(), (float)4.0f);
+            livingEntity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20));
+        }
+        super.stepOn(level, pos, state, entity);
+    }
 
     @Override
     public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
-        if (state.getValue(AllConstants.LIT_SOUL).equals(SoulFireState.BURN)) {
+        double d0 = (double)pos.getX() + 0.5;
+        double d1 = (double)pos.getY() + 0.75;
+        double d2 = (double)pos.getZ() + 0.5;
+
+        if (!state.getValue(AllConstants.LIT_SOUL).equals(SoulFireState.NONE)) {
             if (random.nextInt(10) == 0) {
-                level.playLocalSound((double)pos.getX() + 0.5, (double)pos.getY() + 0.5, (double)pos.getZ() + 0.5, SoundEvents.CAMPFIRE_CRACKLE,
-                        SoundSource.BLOCKS,  0.5F + random.nextFloat(),  random.nextFloat() * 0.7F + 0.6F,  false);
+                level.playLocalSound(d0, d1, d2, SoundEvents.CAMPFIRE_CRACKLE, SoundSource.BLOCKS,
+                        0.5F + random.nextFloat(), random.nextFloat() * 0.8F + 1F, false);
             }
-            if (random.nextInt(3) == 0) {
-                for (int i = 0; i < random.nextInt(2) + 1; i++) {
-                    level.addParticle(ParticleTypes.LAVA, (double)pos.getX() + 0.5, (double)pos.getY() + 0.75, (double)pos.getZ() + 0.5,
-                            (double)(random.nextFloat() / 2.0F), 5.0E-5, (double)(random.nextFloat() / 2.0F));
-                }
+
+            for (int i = 0; i < random.nextInt(1) + 1; i++) {
+                level.addParticle(ParticleTypes.LAVA, d0, d1, d2, (random.nextFloat() / 2.0F), 5.0E-5, (random.nextFloat() / 2.0F));
             }
-        }else if(state.getValue(AllConstants.LIT_SOUL).equals(SoulFireState.SOUL)){
-            if (random.nextInt(8) == 0) {
-                level.playLocalSound((double)pos.getX() + 0.5, (double)pos.getY() + 0.5, (double)pos.getZ() + 0.5, SoundEvents.CAMPFIRE_CRACKLE,
-                        SoundSource.BLOCKS,  0.5F + random.nextFloat(),  random.nextFloat() * 0.7F + 0.6F,  false);
+
+            for(int i=0;i<random.nextIntBetweenInclusive(4,6);i++){
+                level.addAlwaysVisibleParticle(ParticleTypes.SMOKE,
+                        d0 + random.nextDouble() / 3.0 * (random.nextBoolean() ? 1 : -1),
+                        d1 + random.nextDouble() * 0.5,
+                        d2 + random.nextDouble() / 3.0 * (random.nextBoolean() ? 1 : -1),
+                        0.0, 0.07, 0.0);
             }
-            if (random.nextInt(3) == 0) {
-                for (int i = 0; i < random.nextInt(3) + 1; i++) {
-                    level.addParticle(ParticleTypes.SOUL_FIRE_FLAME, (double)pos.getX() + 0.5, (double)pos.getY() + 0.75, (double)pos.getZ() + 0.5,
-                            (double)(random.nextFloat() / 2.0F), 5.0E-5, (double)(random.nextFloat() / 2.0F));
-                }
+
+            for(int i=0;i<random.nextIntBetweenInclusive(2,3);i++){
+                level.addParticle(ParticleTypes.WHITE_SMOKE,
+                        d0 + random.nextDouble() / 3.0 * (random.nextBoolean() ? 1 : -1),
+                        d1 + random.nextDouble() * 0.5,
+                        d2 + random.nextDouble() / 3.0 * (random.nextBoolean() ? 1 : -1),
+                        0.0, 0.07, 0.0);
             }
-            if (random.nextInt(3) == 0) {
-                level.addParticle(ParticleTypes.SOUL, (double)pos.getX() + 0.5, (double)pos.getY() + 0.75, (double)pos.getZ() + 0.5,
-                        (double)(random.nextFloat() / 2.0F), 5.0E-5, (double)(random.nextFloat() / 2.0F));
+
+            for(int i=0;i<random.nextIntBetweenInclusive(1,3);i++){
+                level.addParticle(ParticleTypes.LARGE_SMOKE,
+                        d0 + random.nextDouble() / 3.0 * (random.nextBoolean() ? 1 : -1),
+                        d1 + random.nextDouble() * 0.5,
+                        d2 + random.nextDouble() / 3.0 * (random.nextBoolean() ? 1 : -1),
+                        0.0, 0.07, 0.0);
+            }
+
+            for(int i=0;i<random.nextIntBetweenInclusive(1,2);i++){
+                level.addParticle(ParticleTypes.CAMPFIRE_COSY_SMOKE,
+                        d0 + random.nextDouble() / 3.0 * (random.nextBoolean() ? 1 : -1),
+                        d1 + random.nextDouble() * 0.5,
+                        d2 + random.nextDouble() / 3.0 * (random.nextBoolean() ? 1 : -1),
+                        0.0, 0.07, 0.0);
             }
         }
+
+        if(state.getValue(AllConstants.LIT_SOUL).equals(SoulFireState.SOUL)){
+            for(int i=0;i<random.nextIntBetweenInclusive(0,2);i++){
+                level.addParticle(ParticleTypes.SOUL_FIRE_FLAME,
+                        d0 + random.nextDouble() / 3.0 * (random.nextBoolean() ? 1 : -1),
+                        d1 + random.nextDouble() * 0.5,
+                        d2 + random.nextDouble() / 3.0 * (random.nextBoolean() ? 1 : -1),
+                        ((random.nextFloat()-0.5f) / 4.0F), 0.07, ((random.nextFloat()-0.5f) / 4.0F));
+            }
+
+            for(int i=0;i<random.nextIntBetweenInclusive(1,2);i++){
+                level.addParticle(ParticleTypes.SOUL,
+                        d0 + random.nextDouble() / 3.0 * (random.nextBoolean() ? 1 : -1),
+                        d1 + random.nextDouble() * 0.5,
+                        d2 + random.nextDouble() / 3.0 * (random.nextBoolean() ? 1 : -1),
+                        ((random.nextFloat()-0.5f) / 4.0F), 0.07, ((random.nextFloat()-0.5f) / 4.0F));
+            }
+        }
+        super.animateTick(state, level, pos, random);
     }
 }

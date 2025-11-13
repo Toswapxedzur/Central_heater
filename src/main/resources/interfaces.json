@@ -1,5 +1,0 @@
-{
-  "net/minecraft/world/level/block/entity/CampfireBlockEntity": [
-    "com/minecart/central_heater/mixin/HopperBlockEntityDuckInterface"
-  ]
-}

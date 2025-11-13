@@ -1,8 +1,11 @@
 {
-  "parent": "central_heater:block/goldgrid_stove_off",
+  "parent": "central_heater:block/stove_off",
   "textures": {
     "0": "minecraft:block/red_nether_bricks",
-    "4": "central_heater:block/red_nether_brick_stove_beam",
+    "1": "central_heater:block/red_nether_bricks_stove_side",
+    "2": "central_heater:block/gold_grid",
+    "4": "central_heater:block/red_nether_bricks_stove_front",
+    "5": "central_heater:block/campfire_dust",
     "particle": "minecraft:block/red_nether_bricks"
   }
 }

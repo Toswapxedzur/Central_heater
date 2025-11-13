@@ -3,7 +3,6 @@ package com.minecart.central_heater.recipe;
 import com.minecart.central_heater.AllRegistry;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
-import org.jetbrains.annotations.NotNull;
 
 public class SeethingRecipe extends AbstractCookingRecipe{
 //    RecipeSerializer<SeethingRecipe> SEETHING_RECIPE = RecipeSerializer.register("seething", new SimpleCookingSerializer<>(SeethingRecipe::new, 400));
@@ -14,7 +13,7 @@ public class SeethingRecipe extends AbstractCookingRecipe{
 
     @Override
     public ItemStack getToastSymbol() {
-        return new ItemStack(AllRegistry.Stone_stove.asItem());
+        return new ItemStack(AllRegistry.stone_stove.asItem());
     }
 
     @Override

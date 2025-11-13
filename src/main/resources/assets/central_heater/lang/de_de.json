@@ -1,0 +1,26 @@
+{
+  "block.central_heater.stone_stove": "Steinofen",
+  "block.central_heater.deepslate_stove": "Tiefenschieferofen",
+  "block.central_heater.brick_stove": "Ziegelofen",
+  "block.central_heater.mud_brick_stove": "Lehmziegelofen",
+  "block.central_heater.nether_brick_stove": "Netherziegelofen",
+  "block.central_heater.red_nether_brick_stove": "Roter Netherziegelofen",
+
+  "block.central_heater.stone_brick_tile": "Steinziegelfliese",
+  "block.central_heater.stone_brick_tile_stair": "Steinziegelfliesentreppe",
+  "block.central_heater.stone_brick_tile_slab": "Steinziegelfliesenstufe",
+  "block.central_heater.stone_brick_tile_wall": "Steinziegelfliesenmauer",
+  "block.central_heater.deepslate_brick_tile": "Tiefenschiefer-Ziegelfliese",
+  "block.central_heater.deepslate_brick_tile_stair": "Tiefenschiefer-Ziegelfliesentreppe",
+  "block.central_heater.deepslate_brick_tile_slab": "Tiefenschiefer-Ziegelfliesenstufe",
+  "block.central_heater.deepslate_brick_tile_wall": "Tiefenschiefer-Ziegelfliesenmauer",
+  "block.central_heater.gold_bars": "Goldgitter",
+
+  "item.central_heater.cobble": "Bruchstein",
+  "item.central_heater.deepslate_cobble": "BruchTiefenschiefer",
+  "item.central_heater.stone_brick": "Steinziegel",
+  "item.central_heater.mud_brick": "Lehmziegel",
+  "item.central_heater.red_nether_brick": "Roter Netherziegel",
+  "item.central_heater.deepslate_brick": "Tiefenschieferziegel",
+  "item.central_heater.diamond_shard": "Diamantsplitter"
+}

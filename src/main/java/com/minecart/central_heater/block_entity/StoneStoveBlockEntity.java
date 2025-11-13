@@ -1,29 +1,24 @@
 package com.minecart.central_heater.block_entity;
 
 import com.minecart.central_heater.AllRegistry;
+import com.minecart.central_heater.block.BrickStoveBlock;
 import com.minecart.central_heater.block.StoneStoveBlock;
-import com.minecart.central_heater.util.StackableItemStackHandler;
 import net.minecraft.core.*;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
 public class StoneStoveBlockEntity extends AbstractStoveBlockEntity {
@@ -34,12 +29,12 @@ public class StoneStoveBlockEntity extends AbstractStoveBlockEntity {
     public int[] cookingTotalTime;
     public NonNullList<ItemStack> recordValidator;
 
-    public final int fuelConsumption = 3;
+    public final int fuelConsumption = 2;
     public static final int coolRate = 2;
     public static final int processSpeed = 450;
 
     public StoneStoveBlockEntity(BlockPos pos, BlockState blockState){
-        super(AllRegistry.Stone_stove_be.get(), pos, blockState, 4,
+        super(AllRegistry.stone_stove_be.get(), pos, blockState, 4,
                 stack -> stack.getBurnTime(RecipeType.SMELTING) != 0, 4);
         litTime = 0;
         cookingProgress = new int[itemCapacity];
@@ -101,6 +96,21 @@ public class StoneStoveBlockEntity extends AbstractStoveBlockEntity {
 
         if(state.getValue(StoneStoveBlock.LIT) != entity.isLit()){
             entity.update();
+        }
+    }
+
+    public static void clientTick(Level level, BlockPos pos, BlockState state, StoneStoveBlockEntity entity){
+        RandomSource randomsource = level.random;
+        if(state.getValue(StoneStoveBlock.LIT).booleanValue()) {
+            if (randomsource.nextFloat() < 0.11F) {
+                for (int i = 0; i < randomsource.nextInt(2) + 2; i++) {
+                    level.addAlwaysVisibleParticle(ParticleTypes.CAMPFIRE_COSY_SMOKE,true,
+                            (double)pos.getX() + 0.5 + randomsource.nextDouble() / 3.0 * (double)(randomsource.nextBoolean() ? 1 : -1),
+                            (double)pos.getY() + randomsource.nextDouble() + randomsource.nextDouble(),
+                            (double)pos.getZ() + 0.5 + randomsource.nextDouble() / 3.0 * (double)(randomsource.nextBoolean() ? 1 : -1),
+                            0.0, 0.07, 0.0);
+                }
+            }
         }
     }
 

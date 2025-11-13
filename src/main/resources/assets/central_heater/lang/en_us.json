@@ -1,2 +1,26 @@
 {
+  "block.central_heater.stone_stove": "Stone Stove",
+  "block.central_heater.deepslate_stove": "Deepslate Stove",
+  "block.central_heater.brick_stove": "Brick Stove",
+  "block.central_heater.mud_brick_stove": "Mud Brick Stove",
+  "block.central_heater.nether_brick_stove": "Nether Brick Stove",
+  "block.central_heater.red_nether_brick_stove": "Red Nether Brick Stove",
+
+  "block.central_heater.stone_brick_tile": "Stone Brick Tile",
+  "block.central_heater.stone_brick_tile_stair": "Stone Brick Tile Stairs",
+  "block.central_heater.stone_brick_tile_slab": "Stone Brick Tile Slab",
+  "block.central_heater.stone_brick_tile_wall": "Stone Brick Tile Wall",
+  "block.central_heater.deepslate_brick_tile": "Deepslate Brick Tile",
+  "block.central_heater.deepslate_brick_tile_stair": "Deepslate Brick Tile Stairs",
+  "block.central_heater.deepslate_brick_tile_slab": "Deepslate Brick Tile Slab",
+  "block.central_heater.deepslate_brick_tile_wall": "Deepslate Brick Tile Wall",
+  "block.central_heater.gold_bars": "Gold Bars",
+
+  "item.central_heater.cobble": "Cobble",
+  "item.central_heater.deepslate_cobble": "Deepslate Cobble",
+  "item.central_heater.stone_brick": "Stone Brick",
+  "item.central_heater.mud_brick": "Mud Brick",
+  "item.central_heater.red_nether_brick": "Red Nether Brick",
+  "item.central_heater.deepslate_brick": "Deepslate Brick",
+  "item.central_heater.diamond_shard": "Diamond Shard"
 }

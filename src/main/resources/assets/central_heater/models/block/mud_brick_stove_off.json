@@ -1,0 +1,11 @@
+{
+  "parent": "central_heater:block/stove_off",
+  "textures": {
+    "0": "minecraft:block/mud_bricks",
+    "1": "central_heater:block/mud_brick_stove_side",
+    "2": "central_heater:block/iron_grid",
+    "4": "central_heater:block/mud_brick_stove_front",
+    "5": "central_heater:block/campfire_dust",
+    "particle": "minecraft:block/mud_bricks"
+  }
+}
